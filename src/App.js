@@ -1,8 +1,13 @@
 import React from 'react';
 import './App.css';
+import HomeComponent from './components/HomeComponent';
 
 function App() {
-  return <React.Fragment>Hi</React.Fragment>;
+  return (
+    <main>
+      <HomeComponent />
+    </main>
+  );
 }
 
 export default App;
