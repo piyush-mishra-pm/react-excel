@@ -37,6 +37,7 @@ const HomeComponent = () => {
       <div className="row mb-2 mt-5">
         <div className="col-sm-6 offset-3">
           <div className="row">
+            {/** Input Component */}
             <div className="col-md-6">
               <div className="input-group">
                 <div className="custom-file">
@@ -55,6 +56,7 @@ const HomeComponent = () => {
                 </div>
               </div>
             </div>
+            {/** Export Component */}
             <div className="col-md-6">
               <button onClick={handleExport} className="btn btn-primary float-right">
                 Export <i className="fa fa-download"></i>
@@ -63,6 +65,7 @@ const HomeComponent = () => {
           </div>
         </div>
       </div>
+      {/** Visualisation */}
       <div className="row">
         <div className="col-sm-6 offset-3">
           <table className="table">
