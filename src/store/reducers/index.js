@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
-import DummyReducer from './DummyReducer';
+import SpreadSheetReducer from './SpreadSheetReducer';
 
 export default combineReducers({
-  DummyReducer,
+  SpreadSheetReducer,
 });
