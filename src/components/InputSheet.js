@@ -11,14 +11,18 @@ function InputSheet() {
     const files = $event.target.files;
     if (files.length) {
       const file = files[0];
+      console.log(files);
       const reader = new FileReader();
       reader.onload = (event) => {
         const wb = read(event.target.result);
         const sheets = wb.SheetNames;
-        if (sheets.length) {
-          const readJsonData = utils.sheet_to_json(wb.Sheets[sheets[0]]);
-          dispatch({ type: ACTION_TYPES.READ_SPREADSHEET, payload: readJsonData });
+        const allSheetData = [];
+        for (const sheet of sheets) {
+          console.log(sheet);
+          const readJsonData = utils.sheet_to_json(wb.Sheets[sheet]);
+          allSheetData.push(readJsonData);
         }
+        dispatch({ type: ACTION_TYPES.READ_SPREADSHEET, payload: allSheetData });
       };
       reader.readAsArrayBuffer(file);
     }

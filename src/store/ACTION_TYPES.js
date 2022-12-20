@@ -1,6 +1,10 @@
 // ACTION TYPES involved in app:
 const ACTION_TYPES = {
+  // Reading:
   READ_SPREADSHEET: 'READ_SPREADSHEET',
+  // Testing text:
+  TEST_SPREADSHEET: 'TEST_SPREADSHEET',
+  TEST_SPREADSHEET_ITEM: 'TEST_SPREADSHEET_ITEM',
 };
 
 export default ACTION_TYPES;

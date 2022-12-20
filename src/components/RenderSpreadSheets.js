@@ -1,30 +1,33 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 function RenderSpreadSheets() {
-  const movies = useSelector((state) => state.SpreadSheetReducer);
+  const state = useSelector((state) => state);
+  const movies = state.root ? state.root.importedData : null;
 
   return (
     <table className="table">
       <thead>
         <tr>
-          <th scope="col">Id</th>
-          <th scope="col">Movie</th>
-          <th scope="col">Category</th>
-          <th scope="col">Director</th>
-          <th scope="col">Rating</th>
+          {movies.length &&
+            Object.keys(movies[0]).length &&
+            Object.keys(movies[0][0]).length &&
+            Object.keys(movies[0][0]).map((key) => (
+              <th scope="col" key={key}>
+                {key}
+              </th>
+            ))}
         </tr>
       </thead>
       <tbody>
-        {movies.length ? (
-          movies.map((movie, index) => (
+        {movies.length && movies[0].length ? (
+          movies[0].map((row, index) => (
             <tr key={index}>
-              <th scope="row">{index + 1}</th>
-              <td>{movie.Movie}</td>
-              <td>{movie.Category}</td>
-              <td>{movie.Director}</td>
-              <td>
-                <span className="badge bg-warning text-dark">{movie.Rating}</span>
-              </td>
+              <th scope="row" key={`${index}`}>
+                {index + 1}
+              </th>
+              {Object.keys(row).map((rowKey) => (
+                <td key={`${index}-${rowKey}`}>{row[rowKey]}</td>
+              ))}
             </tr>
           ))
         ) : (
