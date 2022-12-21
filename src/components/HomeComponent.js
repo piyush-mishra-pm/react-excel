@@ -3,6 +3,8 @@ import React from 'react';
 import InputSheet from './InputSheet';
 import ExportSheet from './ExportSheet';
 import RenderSpreadSheets from './RenderSpreadSheets';
+import TestSheet from './TestSheet';
+
 const HomeComponent = () => {
   return (
     <>
@@ -12,6 +14,8 @@ const HomeComponent = () => {
         {/** Export Component */}
         <ExportSheet />
       </div>
+      {/** Test component */}
+      <TestSheet />
       {/** Visualisation */}
       <RenderSpreadSheets />
     </>
