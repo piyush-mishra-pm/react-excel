@@ -12,11 +12,15 @@ function SpreadSheetReducer(state = INITIAL_STATE, action) {
       break;
 
     case ACTION_TYPES.TEST_SPREADSHEET_ITEM:
-      state.testResultsData = modifyByRowAndField(state.testResultsData, action.payload); // payload:{row, field, sheet}
+      state.testResultsData = modifyBySheetRowField(state.testResultsData, action.payload); // payload:{row, field, sheet, testID}
       break;
 
     case ACTION_TYPES.TEST_INIT:
       state.testResultsData = getInitTestData(state.importedData);
+      break;
+
+    case ACTION_TYPES.TEST_CLEAR:
+      state.testResultsData = INITIAL_STATE.testResultsData;
       break;
 
     default:
@@ -25,14 +29,20 @@ function SpreadSheetReducer(state = INITIAL_STATE, action) {
   return state;
 }
 
-function modifyByRowAndField(clonedTestResultsState, payload) {
+function modifyBySheetRowField(clonedTestResultsState, payload) {
+  // console.log(payload.sheet);
+  // console.log(payload.row);
+  // console.log(payload.field);
+  // console.log(clonedTestResultsState[payload.sheet][payload.row][payload.field].testResults);
+  // console.log(payload.testResults);
+
+  clonedTestResultsState[payload.sheet][payload.row][payload.field].testResults = payload.testResults;
   return clonedTestResultsState;
 }
 
 // Append value and test results fields to each cell value.
 function getInitTestData(importedData) {
   const initTestData = _.cloneDeep(importedData);
-  console.log(importedData);
   for (const sheet in importedData) {
     for (const row in importedData[sheet]) {
       for (const field of Object.keys(importedData[sheet][row])) {
