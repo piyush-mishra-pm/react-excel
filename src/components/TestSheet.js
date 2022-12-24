@@ -4,6 +4,7 @@ import ACTION_TYPES from '../store/ACTION_TYPES';
 
 import TestResults from './TestResults';
 import TextTests from './TextTests.js';
+import ImageTests from './ImageTests';
 
 function TestSheet() {
   const dispatch = useDispatch();
@@ -13,6 +14,7 @@ function TestSheet() {
     dispatch({ type: ACTION_TYPES.TEST_INIT });
     // Perform text tests.
     TextTests();
+    ImageTests();
   }
 
   function clearTestSuite() {
