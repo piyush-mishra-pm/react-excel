@@ -36,7 +36,6 @@ function InputSheet() {
         onChange={handleImport}
         accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
       />
-      <label htmlFor="inputGroupFile">Choose file</label>
     </div>
   );
 }

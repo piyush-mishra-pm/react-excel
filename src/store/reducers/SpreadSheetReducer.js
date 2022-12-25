@@ -30,12 +30,6 @@ function SpreadSheetReducer(state = INITIAL_STATE, action) {
 }
 
 function modifyBySheetRowField(clonedTestResultsState, payload) {
-  // console.log(payload.sheet);
-  // console.log(payload.row);
-  // console.log(payload.field);
-  // console.log(clonedTestResultsState[payload.sheet][payload.row][payload.field].testResults);
-  // console.log(payload.testResults);
-
   clonedTestResultsState[payload.sheet][payload.row][payload.field].testResults = payload.testResults;
   return clonedTestResultsState;
 }

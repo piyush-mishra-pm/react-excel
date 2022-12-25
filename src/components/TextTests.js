@@ -9,7 +9,7 @@ function TextTests() {
 }
 
 function performTextTests(state) {
-  console.log('running');
+  console.log('txt tests running');
   const FIELDS_FOR_TESTS = [3, 4];
   const SHEETS_FOR_TESTS = [0];
   const SIZE_LIMIT_MAX = 50;

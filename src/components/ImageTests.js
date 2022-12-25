@@ -10,18 +10,12 @@ function ImageTests() {
 
 function getMeta(url, existingObjectStoredInField, sheetNumber, rowNum, fieldName) {
   var img = new Image();
-  console.log(url);
   img.addEventListener('load', function () {
-    console.log(
-      url,
-      '\nN_H ' + this.naturalWidth + ': NW' + this.naturalHeight + '; H' + this.width + ': W' + this.height
-    );
     analyzeLoadedImage(this, existingObjectStoredInField, sheetNumber, rowNum, fieldName);
   });
   // todo: incorporate these checks too: https://stackoverflow.com/questions/1977871/check-if-an-image-is-loaded-no-errors-with-jquery
   // https://keith.gaughan.ie/detecting-broken-images-js.html
   img.addEventListener('error', function () {
-    console.log(url, '\nError loading');
     onErrorLoadingTheImage(existingObjectStoredInField, sheetNumber, rowNum, fieldName);
   });
   img.src = url;

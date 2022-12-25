@@ -5,40 +5,38 @@ function RenderSpreadSheets() {
   const movies = state.root ? state.root.importedData : null;
 
   return (
-    <table className="table">
-      <thead>
-        <tr>
-          {movies.length &&
-            Object.keys(movies[0]).length &&
-            Object.keys(movies[0][0]).length &&
-            Object.keys(movies[0][0]).map((key) => (
-              <th scope="col" key={key}>
-                {key}
-              </th>
-            ))}
-        </tr>
-      </thead>
-      <tbody>
-        {movies.length && movies[0].length ? (
-          movies[0].map((row, index) => (
-            <tr key={index}>
-              <th scope="row" key={`${index}`}>
-                {index + 1}
-              </th>
-              {Object.keys(row).map((rowKey) => (
-                <td key={`${index}-${rowKey}`}>{row[rowKey]}</td>
-              ))}
-            </tr>
-          ))
-        ) : (
+    <div style={{ backgroundColor: 'cyan' }}>
+      <h3>Render sheet</h3>
+      <table className="ui celled table" style={{ display: 'block', overflow: 'auto', margin: '1rem' }}>
+        <thead>
           <tr>
-            <td colSpan="5" className="text-center">
-              No Movies Found.
-            </td>
+            {movies.length &&
+              Object.keys(movies[0]).length &&
+              Object.keys(movies[0][0]).length &&
+              Object.keys(movies[0][0]).map((key) => (
+                <th scope="col" key={key}>
+                  {key}
+                </th>
+              ))}
           </tr>
-        )}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {movies.length && movies[0].length ? (
+            movies[0].map((row, index) => (
+              <tr key={index}>
+                {Object.keys(row).map((rowKey) => (
+                  <td key={`${index}-${rowKey}`}>{row[rowKey]}</td>
+                ))}
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan="5">No Data uploaded.</td>
+            </tr>
+          )}
+        </tbody>
+      </table>
+    </div>
   );
 }
 
