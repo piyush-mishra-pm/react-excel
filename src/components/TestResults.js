@@ -1,5 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
+
 function TestResults() {
   const testResultsData = useSelector((state) => state.root.testResultsData);
   const movies = testResultsData;
@@ -25,10 +26,16 @@ function TestResults() {
             movies[0].map((row, index) => (
               <tr key={index}>
                 {Object.keys(row).map((rowKey) => (
-                  <td key={`${index}-${rowKey}`}>
-                    {row[rowKey].value}{' '}
+                  <td key={`${index}-${rowKey}`} className={row[rowKey].testResults.length ? 'negative' : ''}>
+                    {renderImageOrTextValue(row[rowKey].value)}{' '}
+                    {/** todo: Show passed and failed test IDs.
+                     * todo: Even if single check fails, mark red.
+                     * todo: Show metadata of failed checks.
+                     * todo: Show only ID of passed checks. */}
                     {row[rowKey].testResults.map((testResult) => (
-                      <div style={{ color: 'red' }}>{testResult}</div>
+                      <div style={{ color: 'red' }} key={testResult}>
+                        {testResult}
+                      </div>
                     ))}
                   </td>
                 ))}
@@ -46,5 +53,43 @@ function TestResults() {
     </div>
   );
 }
+
+function renderImageOrTextValue(content) {
+  if (isImageUrl(content)) {
+    return (
+      <React.Fragment>
+        <a href={content} target="_blank" rel="noopener noreferrer">
+          <p>{content}</p>
+          <img
+            src={content}
+            alt={`rendered ${content}`}
+            className="ui image"
+            style={{
+              backgroundColor: isPngImage(content) ? 'blue' : '',
+              objectFit: 'cover',
+              objectPosition: 'center',
+              maxHeight: '200px',
+              maxWidth: '400px',
+            }}
+          />
+        </a>
+      </React.Fragment>
+    );
+  }
+  return content;
+}
+
+function isImageUrl(url) {
+  if (typeof url !== 'string') return false;
+  // eslint-disable-next-line
+  return url.match(/^http[^\?]*.(jpg|jpeg|gif|png|tiff|bmp)(\?(.*))?$/gim) != null;
+}
+
+function isPngImage(url) {
+  if (typeof url !== 'string') return false;
+  // eslint-disable-next-line
+  return url.match(/^http[^\?]*.(png)(\?(.*))?$/gim) != null;
+}
+
 
 export default TestResults;

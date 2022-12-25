@@ -23,7 +23,7 @@ function getMeta(url, existingObjectStoredInField, sheetNumber, rowNum, fieldNam
 
 function performImageTests(state) {
   console.log('img tests running');
-  const FIELDS_FOR_TESTS = [13];
+  const FIELDS_FOR_TESTS = [12, 13];
   const SHEETS_FOR_TESTS = [0];
 
   for (const SHEET_FOR_TESTS of SHEETS_FOR_TESTS) {
