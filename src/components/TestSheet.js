@@ -3,8 +3,7 @@ import { useDispatch } from 'react-redux';
 import ACTION_TYPES from '../store/ACTION_TYPES';
 
 import TestResults from './TestResults';
-import TextTests from './TextTests.js';
-import ImageTests from './ImageTests';
+import PerformTests from './PerformTests.js';
 
 function TestSheet() {
   const dispatch = useDispatch();
@@ -13,8 +12,7 @@ function TestSheet() {
     // Clone imported sheet data as initial test results.
     dispatch({ type: ACTION_TYPES.TEST_INIT });
     // Perform text tests.
-    TextTests();
-    ImageTests();
+    PerformTests();
   }
 
   function clearTestSuite() {

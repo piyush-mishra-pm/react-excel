@@ -1,5 +1,8 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
+
+import * as TestUtils from '../store/TestUtils';
+
 function RenderSpreadSheets() {
   const state = useSelector((state) => state);
   const movies = state.root ? state.root.importedData : null;
@@ -41,17 +44,17 @@ function RenderSpreadSheets() {
 }
 
 function renderImageOrTextValue(content) {
-  if (isImageUrl(content)) {
+  if (TestUtils.isImageUrlOfAllowedImageFormats(content)) {
     return (
       <React.Fragment>
         <a href={content} target="_blank" rel="noopener noreferrer">
           <p>{content}</p>
           <img
             src={content}
-            alt={`rendered ${content}`}
+            alt=''
             className="ui image"
             style={{
-              backgroundColor: isPngImage(content) ? 'blue' : '',
+              backgroundColor: TestUtils.isPngImage(content) ? 'blue' : '',
               objectFit: 'cover',
               objectPosition: 'center',
               maxHeight: '200px',
@@ -63,18 +66,6 @@ function renderImageOrTextValue(content) {
     );
   }
   return content;
-}
-
-function isImageUrl(url) {
-  if (typeof url !== 'string') return false;
-  // eslint-disable-next-line
-  return url.match(/^http[^\?]*.(jpg|jpeg|gif|png|tiff|bmp)(\?(.*))?$/gim) != null;
-}
-
-function isPngImage(url) {
-  if (typeof url !== 'string') return false;
-  // eslint-disable-next-line
-  return url.match(/^http[^\?]*.(png)(\?(.*))?$/gim) != null;
 }
 
 export default RenderSpreadSheets;
