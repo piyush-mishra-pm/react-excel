@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 
 import InputSheet from './InputSheet';
 import ExportSheet from './ExportSheet';
@@ -7,7 +7,7 @@ import TestSheet from './TestSheet';
 import TestResults from './TestResults';
 
 const HomeComponent = () => {
-  const [testResultsTabEnabled, setTestResultsTabEnabled] = useState(false)
+  const [testResultsTabEnabled, setTestResultsTabEnabled] = useState(false);
   return (
     <>
       <div className="row">
@@ -20,8 +20,12 @@ const HomeComponent = () => {
       </div>
 
       <div className="ui top attached tabular menu">
-        <div className={`${(!testResultsTabEnabled) && 'active'} item`} onClick={() => setTestResultsTabEnabled(false)}>Imported</div>
-        <div className={`${testResultsTabEnabled && 'active'} item`} onClick={() => setTestResultsTabEnabled(true)}>TestResults</div>
+        <div className={`${!testResultsTabEnabled && 'active'} item`} onClick={() => setTestResultsTabEnabled(false)}>
+          Imported
+        </div>
+        <div className={`${testResultsTabEnabled && 'active'} item`} onClick={() => setTestResultsTabEnabled(true)}>
+          TestResults
+        </div>
       </div>
       <div className={`ui bottom attached ${!testResultsTabEnabled && 'active'} tab segment`}>
         {/** Visualisation */}

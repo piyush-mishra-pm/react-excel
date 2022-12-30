@@ -1,6 +1,6 @@
 const INITIAL_STATE = {
-  importedData: {},
-  testResultsData: {},
+  importedData: [],
+  testResultsData: [],
 };
 
 export default INITIAL_STATE;
