@@ -17,7 +17,7 @@ function InputSheet() {
         const sheets = wb.SheetNames;
         const allSheetData = [];
         for (const sheet of sheets) {
-          const readJsonData = utils.sheet_to_json(wb.Sheets[sheet]);
+          const readJsonData = utils.sheet_to_json(wb.Sheets[sheet], { defval: "" });
           allSheetData.push(readJsonData);
         }
         dispatch({ type: ACTION_TYPES.READ_SPREADSHEET, payload: allSheetData });

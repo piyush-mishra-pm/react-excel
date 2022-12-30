@@ -40,7 +40,7 @@ function getInitTestData(importedData) {
   for (const sheet in importedData) {
     for (const row in importedData[sheet]) {
       for (const field of Object.keys(importedData[sheet][row])) {
-        initTestData[sheet][row][field] = { value: importedData[sheet][row][field], testResults: [] };
+        initTestData[sheet][row][field] = { value: importedData[sheet][row][field] || null, testResults: [] };
       }
     }
   }
