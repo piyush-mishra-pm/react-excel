@@ -2,14 +2,14 @@ import React from 'react';
 
 import * as TestUtils from '../store/TestUtils';
 
-function RenderSpreadSheet(props) {
+function RenderTestResultsForASheet(props) {
   const sheetData = props.sheetData;
   const COLUMN_NAMES = Object.keys(sheetData[0]);
+
   return (
     <div>
       {sheetData.length && (
-        <table className="ui celled table" style={{display: 'block', overflow: 'auto', margin: '1rem'}}>
-          {/** Render table header */}
+        <table className="ui celled table" style={{display: 'block', overflow: 'auto'}}>
           <thead>
             <tr>
               {COLUMN_NAMES.map((COL_NAME) => (
@@ -21,10 +21,21 @@ function RenderSpreadSheet(props) {
           </thead>
           {/** Render table body */}
           <tbody>
-            {sheetData.map((row, index) => (
-              <tr key={index}>
+            {sheetData.map((row, rowIndex) => (
+              <tr key={rowIndex}>
                 {COLUMN_NAMES.map((COL_NAME) => (
-                  <td key={`${index}-${COL_NAME}`}>{renderImageOrTextValue(row[COL_NAME])}</td>
+                  <td key={`${rowIndex}-${COL_NAME}`} className={row[COL_NAME].testResults.length ? 'negative' : ''}>
+                    {renderImageOrTextValue(row[COL_NAME].value)}{' '}
+                    {/** todo: Show passed and failed test IDs.
+                     * todo: Even if single check fails, mark red.
+                     * todo: Show metadata of failed checks.
+                     * todo: Show only ID of passed checks. */}
+                    {row[COL_NAME].testResults.map((testID) => (
+                      <div style={{color: 'red'}} key={`${rowIndex}-${COL_NAME}-${testID}`}>
+                        {testID}
+                      </div>
+                    ))}
+                  </td>
                 ))}
               </tr>
             ))}
@@ -43,7 +54,7 @@ function renderImageOrTextValue(content) {
           <p>{content}</p>
           <img
             src={content}
-            alt=""
+            alt={`rendered ${content}`}
             className="ui image"
             style={{
               backgroundColor: TestUtils.isPngImage(content) ? 'blue' : '',
@@ -60,4 +71,4 @@ function renderImageOrTextValue(content) {
   return content;
 }
 
-export default RenderSpreadSheet;
+export default RenderTestResultsForASheet;
