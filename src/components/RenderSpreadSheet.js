@@ -1,6 +1,6 @@
 import React from 'react';
 
-import * as TestUtils from '../store/TestUtils';
+import {renderBodyCell} from '../utils/RenderUtils';
 
 function RenderSpreadSheet(props) {
   const sheetData = props.sheetData;
@@ -22,42 +22,13 @@ function RenderSpreadSheet(props) {
           {/** Render table body */}
           <tbody>
             {sheetData.map((row, index) => (
-              <tr key={index}>
-                {COLUMN_NAMES.map((COL_NAME) => (
-                  <td key={`${index}-${COL_NAME}`}>{renderImageOrTextValue(row[COL_NAME])}</td>
-                ))}
-              </tr>
+              <tr key={index}>{COLUMN_NAMES.map((COL_NAME) => renderBodyCell(COL_NAME, row, index))}</tr>
             ))}
           </tbody>
         </table>
       )}
     </div>
   );
-}
-
-function renderImageOrTextValue(content) {
-  if (TestUtils.isImageUrlOfAllowedImageFormats(content)) {
-    return (
-      <React.Fragment>
-        <a href={content} target="_blank" rel="noopener noreferrer">
-          <p>{content}</p>
-          <img
-            src={content}
-            alt=""
-            className="ui image"
-            style={{
-              backgroundColor: TestUtils.isPngImage(content) ? 'blue' : '',
-              objectFit: 'cover',
-              objectPosition: 'center',
-              maxHeight: '200px',
-              maxWidth: '400px',
-            }}
-          />
-        </a>
-      </React.Fragment>
-    );
-  }
-  return content;
 }
 
 export default RenderSpreadSheet;

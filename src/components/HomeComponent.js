@@ -4,7 +4,7 @@ import InputSheet from './InputSheet';
 import ExportSheet from './ExportSheet';
 import RenderSpreadSheets from './RenderSpreadSheets';
 import TestSheet from './TestSheet';
-import TestResults from './TestResults';
+import RenderTestResults from './RenderTestResults';
 
 const HomeComponent = () => {
   const [testResultsTabEnabled, setTestResultsTabEnabled] = useState(false);
@@ -33,7 +33,7 @@ const HomeComponent = () => {
       </div>
       <div className={`ui bottom attached ${testResultsTabEnabled && 'active'} tab segment`}>
         {/** Test component */}
-        <TestResults />
+        <RenderTestResults />
       </div>
     </>
   );

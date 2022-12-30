@@ -1,9 +1,9 @@
 import React, {useState} from 'react';
 import {useSelector} from 'react-redux';
 
-import RenderTestResultsForASheet from './RenderTestResultsForASheet';
+import RenderSpreadSheet from './RenderSpreadSheet';
 
-function TestResults() {
+function RenderTestResults() {
   const sheetsData = useSelector((state) => state.root.testResultsData);
   const [activeTestResultTabNumber, setActiveTestResultTabNumber] = useState(0);
 
@@ -24,7 +24,7 @@ function TestResults() {
       </div>
       {sheetsData.length ? (
         <div className="ui bottom attached active tab segment">
-          <RenderTestResultsForASheet sheetData={sheetsData[activeTestResultTabNumber]} />
+          <RenderSpreadSheet sheetData={sheetsData[activeTestResultTabNumber]} />
         </div>
       ) : (
         'No Test results yet!'
@@ -33,4 +33,4 @@ function TestResults() {
   );
 }
 
-export default TestResults;
+export default RenderTestResults;

@@ -1,13 +1,12 @@
 # React Excel
 
-Analysing Excel sheet using React code.
+Analysing Excel sheet using React Frontend.
 
 - Compare sheets.
 - Better visuals.
-- Bidgely Presets.
+- Dropdown for Bidgely Presets (NBI Sheet, Reco Sheet, etc).
+- Tabs for present Test settings/Configs.
+- fieldData.trim() on numeric values Will fail.
 - Passed Test cases also mentioned.
-- Navigation between Multiple sheets.
-- Tests and configs on multiple sheets of a spreadsheet.
-- Refactor Rendering code, so that imported and test Results using same code.
-- Tabs for imported, test results Sheet, and test results list, present Test settings.
-- fieldData.trim() on numeric values.
+- TestMetadata in Test Results. Like how many characters present, vs how many required.
+- Column header should mention the list of test and testMetadata.
