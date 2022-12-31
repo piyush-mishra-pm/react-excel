@@ -9,7 +9,10 @@ function RenderSpreadSheet(props) {
   return (
     <div>
       {sheetData.length && (
-        <table className="ui celled table" style={{display: 'block', overflow: 'auto', margin: '1rem'}}>
+        <table
+          className="ui selectable striped compact celled table"
+          style={{display: 'block', overflow: 'auto', margin: '1rem'}}
+        >
           {/** Render table header */}
           <thead>{renderHeaderRow(sheetData[0], currentActiveSheetNumber)}</thead>
           {/** Render table body */}

@@ -6,10 +6,10 @@ import RenderSpreadSheets from './RenderSpreadSheets';
 import TestSheet from './TestSheet';
 import RenderTestResults from './RenderTestResults';
 
-const HomeComponent = () => {
+const HomeSheetValidatorComponent = () => {
   const [testResultsTabEnabled, setTestResultsTabEnabled] = useState(false);
   return (
-    <>
+    <div className="ui fluid container">
       <div className="row">
         {/** Input Component */}
         <InputSheet />
@@ -35,8 +35,8 @@ const HomeComponent = () => {
         {/** Test component */}
         <RenderTestResults />
       </div>
-    </>
+    </div>
   );
 };
 
-export default HomeComponent;
+export default HomeSheetValidatorComponent;

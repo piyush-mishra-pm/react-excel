@@ -115,7 +115,7 @@ const TEST_SETUP = [
           {
             testId: TEST_DEFINITIONS.TESTS.TEST_TEXT_TOO_LONG.id,
             testMedata: {
-              MAX_CHAR_LEN: 100,
+              MAX_CHAR_LEN: 10,
             },
           },
         ],
@@ -130,13 +130,13 @@ const TEST_SETUP = [
           {
             testId: TEST_DEFINITIONS.TESTS.TEST_TEXT_TOO_SHORT.id,
             testMedata: {
-              MIN_CHAR_LEN: 10,
+              MIN_CHAR_LEN: 170,
             },
           },
           {
             testId: TEST_DEFINITIONS.TESTS.TEST_TEXT_TOO_LONG.id,
             testMedata: {
-              MAX_CHAR_LEN: 150,
+              MAX_CHAR_LEN: 11,
             },
           },
         ],
@@ -153,8 +153,8 @@ const TEST_SETUP = [
           {
             testId: TEST_DEFINITIONS.TESTS.TEST_IMAGE_DIMENSIONS_INCORRECT.id,
             testMedata: {
-              WIDTH_IN_PIXELS: 650,
-              HEIGHT_IN_PIXELS: 650,
+              WIDTH_IN_PIXELS: 1982,
+              HEIGHT_IN_PIXELS: 856,
             },
           },
           {
