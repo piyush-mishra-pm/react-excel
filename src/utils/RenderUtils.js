@@ -1,8 +1,8 @@
 import React from 'react';
 import _ from 'lodash';
 
-import * as TestUtils from '../store/TestUtils';
-import TEST_SETUP from '../store/TEST_SETUP';
+import * as TestUtils from '../tests/TestUtils';
+import TEST_SETUP from '../tests/TEST_SETUP';
 
 export function renderImageOrTextValue(content) {
   if (TestUtils.isImageUrlOfAllowedImageFormats(content)) {
@@ -39,7 +39,7 @@ export function renderBodyCell(COL_NAME, row, rowIndex) {
          * todo: Show metadata of failed checks.
          * todo: Show only ID of passed checks. */}
         {row[COL_NAME].testResults.map((testID) => (
-          <div style={{color: 'red'}} key={`${rowIndex}-${COL_NAME}-${testID}`}>
+          <div style={{color: 'red', fontFamily: 'monospace'}} key={`${rowIndex}-${COL_NAME}-${testID}`}>
             {testID}
           </div>
         ))}

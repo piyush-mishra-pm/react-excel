@@ -16,7 +16,7 @@ const TEST_DEFINITIONS = {
     TEST_TEXT_TOO_LONG: {
       id: 'TEST_TEXT_TOO_LONG',
       description: 'text too long.',
-      metadata: { MAX_CHAR_LEN: 200 },
+      metadata: {MAX_CHAR_LEN: 200},
       testFunction(testData, sheetNumber, rowNum, fieldName, testMetadata) {
         if (testMetadata.MAX_CHAR_LEN) {
           if (testData.length > testMetadata.MAX_CHAR_LEN) {
@@ -31,26 +31,35 @@ const TEST_DEFINITIONS = {
     TEST_TEXT_TOO_SHORT: {
       id: 'TEST_TEXT_TOO_SHORT',
       description: 'text too short.',
-      metadata: { MIN_CHAR_LEN: 20 },
+      metadata: {MIN_CHAR_LEN: 20},
       testFunction(testData, sheetNumber, rowNum, fieldName, testMetadata) {
         if (testMetadata.MIN_CHAR_LEN) {
           if (testData.length < testMetadata.MIN_CHAR_LEN) {
             TestUtils.dispatchTestItemAction(this.id, sheetNumber, rowNum, fieldName);
           }
-        }
-        else if (testData.length < this.metadata.MIN_CHAR_LEN) {
+        } else if (testData.length < this.metadata.MIN_CHAR_LEN) {
           TestUtils.dispatchTestItemAction(this.id, sheetNumber, rowNum, fieldName);
         }
       },
     },
 
-    // Image Tests: 
+    // Image Tests:
     TEST_IMAGE_CANT_LOAD: {
-      id: 'TEST_IMAGE_CANT_LOAD', metadata: {}, description: 'cant load image.',
+      id: 'TEST_IMAGE_CANT_LOAD',
+      metadata: {},
+      description: 'cant load image.',
       testFunction(url, sheetNumber, rowNum, fieldName, testMetadata) {
-        TestUtils.getMeta(url, sheetNumber, rowNum, fieldName, testMetadata, TestUtils.onErrorLoadingTheImage, this.onImageLoadedCallback);
+        TestUtils.getMeta(
+          url,
+          sheetNumber,
+          rowNum,
+          fieldName,
+          testMetadata,
+          TestUtils.onErrorLoadingTheImage,
+          this.onImageLoadedCallback
+        );
       },
-      onImageLoadedCallback(...args) { }
+      onImageLoadedCallback(...args) {},
     },
 
     TEST_IMAGE_DIMENSIONS_INCORRECT: {
@@ -61,7 +70,15 @@ const TEST_DEFINITIONS = {
         HEIGHT_IN_PIXELS: 650,
       },
       testFunction(url, sheetNumber, rowNum, fieldName, testMetadata) {
-        TestUtils.getMeta(url, sheetNumber, rowNum, fieldName, testMetadata, TestUtils.onErrorLoadingTheImage, this.onImageLoadedCallback.bind(this));
+        TestUtils.getMeta(
+          url,
+          sheetNumber,
+          rowNum,
+          fieldName,
+          testMetadata,
+          TestUtils.onErrorLoadingTheImage,
+          this.onImageLoadedCallback.bind(this)
+        );
       },
       onImageLoadedCallback(imgElement, sheetNumber, rowNum, fieldName, testMetadata) {
         const DIMENSION_DESIRED_WIDTH = testMetadata.WIDTH_IN_PIXELS;
@@ -71,10 +88,13 @@ const TEST_DEFINITIONS = {
           if (imgElement.height !== DIMENSION_DESIRED_HEIGHT || imgElement.width !== DIMENSION_DESIRED_WIDTH) {
             TestUtils.dispatchTestItemAction(this.id, sheetNumber, rowNum, fieldName);
           }
-        } else if (imgElement.width !== this.metadata.WIDTH_IN_PIXELS || imgElement.height !== this.metadata.HEIGHT_IN_PIXELS) {
+        } else if (
+          imgElement.width !== this.metadata.WIDTH_IN_PIXELS ||
+          imgElement.height !== this.metadata.HEIGHT_IN_PIXELS
+        ) {
           TestUtils.dispatchTestItemAction(this.id, sheetNumber, rowNum, fieldName);
         }
-      }
+      },
     },
 
     TEST_IMAGE_FORMAT_INCORRECT: {
@@ -93,7 +113,7 @@ const TEST_DEFINITIONS = {
             TestUtils.dispatchTestItemAction(this.id, sheetNumber, rowNum, fieldName);
           }
         }
-      }
+      },
     },
   },
 };

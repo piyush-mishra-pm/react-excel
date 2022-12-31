@@ -3,20 +3,20 @@ import React, {useState} from 'react';
 import InputSheet from './InputSheet';
 import ExportSheet from './ExportSheet';
 import RenderSpreadSheets from './RenderSpreadSheets';
-import TestSheet from './TestSheet';
+import TestController from './TestController';
 import RenderTestResults from './RenderTestResults';
 
 const HomeSheetValidatorComponent = () => {
   const [testResultsTabEnabled, setTestResultsTabEnabled] = useState(false);
   return (
-    <div className="ui fluid container">
+    <div className="ui fluid container" style={{paddin: '1rem'}}>
       <div className="row">
         {/** Input Component */}
         <InputSheet />
         {/** Export Component */}
         <ExportSheet />
         {/** Test Controller */}
-        <TestSheet setTestResultsTabEnabled={setTestResultsTabEnabled} />
+        <TestController setTestResultsTabEnabled={setTestResultsTabEnabled} />
       </div>
 
       <div className="ui top attached tabular menu">

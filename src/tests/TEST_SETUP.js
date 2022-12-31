@@ -1,4 +1,4 @@
-import TEST_DEFINITIONS from "./TEST_DEFINITIONS";
+import TEST_DEFINITIONS from './TEST_DEFINITIONS';
 
 const TEST_SETUP = [
   {

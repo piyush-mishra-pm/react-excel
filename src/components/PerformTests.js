@@ -1,8 +1,8 @@
 import store from '../store/store';
 
 import _ from 'lodash';
-import TEST_SETUP from '../store/TEST_SETUP';
-import TEST_DEFINITIONS from '../store/TEST_DEFINITIONS';
+import TEST_SETUP from '../tests/TEST_SETUP';
+import TEST_DEFINITIONS from '../tests/TEST_DEFINITIONS';
 
 function PerformTests() {
   const state = store.getState();
