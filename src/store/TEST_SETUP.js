@@ -27,7 +27,7 @@ const TEST_SETUP = [
         ],
       },
       {
-        columnNums: [7],
+        columnNums: [3],
         testConfigs: [
           {
             testId: TEST_DEFINITIONS.TESTS.TEST_TEXT_EMPTY.id,
@@ -81,7 +81,7 @@ const TEST_SETUP = [
           {
             testId: TEST_DEFINITIONS.TESTS.TEST_IMAGE_FORMAT_INCORRECT.id,
             testMedata: {
-              IMAGE_FORMATS_ALLOWED: ['jpg'],
+              IMAGE_FORMATS_ALLOWED: ['jpg', 'jpeg'],
             },
           },
           {
@@ -160,7 +160,7 @@ const TEST_SETUP = [
           {
             testId: TEST_DEFINITIONS.TESTS.TEST_IMAGE_FORMAT_INCORRECT.id,
             testMedata: {
-              IMAGE_FORMATS_ALLOWED: ['png'],
+              IMAGE_FORMATS_ALLOWED: ['png', 'jpg'],
             },
           },
         ],

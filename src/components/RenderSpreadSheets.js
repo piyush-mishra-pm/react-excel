@@ -24,7 +24,10 @@ function RenderSpreadSheets() {
       </div>
       {sheetsData.length ? (
         <div className="ui bottom attached active tab segment">
-          <RenderSpreadSheet sheetData={sheetsData[activeSheetNumberTab]} />
+          <RenderSpreadSheet
+            sheetData={sheetsData[activeSheetNumberTab]}
+            currentActiveSheetNumber={activeSheetNumberTab}
+          />
         </div>
       ) : (
         'No Imported sheet yet!'

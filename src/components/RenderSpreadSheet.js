@@ -1,24 +1,17 @@
 import React from 'react';
 
-import {renderBodyCell} from '../utils/RenderUtils';
+import {renderBodyCell, renderHeaderRow} from '../utils/RenderUtils';
 
 function RenderSpreadSheet(props) {
   const sheetData = props.sheetData;
+  const currentActiveSheetNumber = props.currentActiveSheetNumber;
   const COLUMN_NAMES = Object.keys(sheetData[0]);
   return (
     <div>
       {sheetData.length && (
         <table className="ui celled table" style={{display: 'block', overflow: 'auto', margin: '1rem'}}>
           {/** Render table header */}
-          <thead>
-            <tr>
-              {COLUMN_NAMES.map((COL_NAME) => (
-                <th scope="col" key={COL_NAME}>
-                  {COL_NAME}
-                </th>
-              ))}
-            </tr>
-          </thead>
+          <thead>{renderHeaderRow(sheetData[0], currentActiveSheetNumber)}</thead>
           {/** Render table body */}
           <tbody>
             {sheetData.map((row, index) => (

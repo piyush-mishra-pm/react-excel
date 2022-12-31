@@ -9,4 +9,3 @@ Analysing Excel sheet using React Frontend.
 - fieldData.trim() on numeric values Will fail.
 - Passed Test cases also mentioned.
 - TestMetadata in Test Results. Like how many characters present, vs how many required.
-- Column header should mention the list of test and testMetadata.

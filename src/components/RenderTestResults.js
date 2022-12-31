@@ -24,7 +24,10 @@ function RenderTestResults() {
       </div>
       {sheetsData.length ? (
         <div className="ui bottom attached active tab segment">
-          <RenderSpreadSheet sheetData={sheetsData[activeTestResultTabNumber]} />
+          <RenderSpreadSheet
+            sheetData={sheetsData[activeTestResultTabNumber]}
+            currentActiveSheetNumber={activeTestResultTabNumber}
+          />
         </div>
       ) : (
         'No Test results yet!'
