@@ -8,7 +8,9 @@ const TEST_DEFINITIONS = {
       metadata: {},
       testFunction(testData, sheetNumber, rowNum, fieldName, testMetadata) {
         if (!testData) {
-          TestUtils.dispatchTestItemAction(this.id, sheetNumber, rowNum, fieldName);
+          TestUtils.dispatchTestItemAction(this.id, this.description, false, sheetNumber, rowNum, fieldName);
+        } else {
+          TestUtils.dispatchTestItemAction(this.id, '', true, sheetNumber, rowNum, fieldName);
         }
       },
     },
@@ -20,10 +22,30 @@ const TEST_DEFINITIONS = {
       testFunction(testData, sheetNumber, rowNum, fieldName, testMetadata) {
         if (testMetadata.MAX_CHAR_LEN) {
           if (testData.length > testMetadata.MAX_CHAR_LEN) {
-            TestUtils.dispatchTestItemAction(this.id, sheetNumber, rowNum, fieldName);
+            TestUtils.dispatchTestItemAction(
+              this.id,
+              `${this.description} (Exists:${testData.length}/Max_Allowed:${testMetadata.MAX_CHAR_LEN})`,
+              false,
+              sheetNumber,
+              rowNum,
+              fieldName
+            );
+          } else {
+            TestUtils.dispatchTestItemAction(this.id, '', true, sheetNumber, rowNum, fieldName);
           }
-        } else if (testData.length > this.metadata.MAX_CHAR_LEN) {
-          TestUtils.dispatchTestItemAction(this.id, sheetNumber, rowNum, fieldName);
+        } else {
+          if (testData.length > this.metadata.MAX_CHAR_LEN) {
+            TestUtils.dispatchTestItemAction(
+              this.id,
+              `${this.description} (Exists:${testData.length}/Max_Allowed:${this.metadata.MAX_CHAR_LEN})`,
+              false,
+              sheetNumber,
+              rowNum,
+              fieldName
+            );
+          } else {
+            TestUtils.dispatchTestItemAction(this.id, '', true, sheetNumber, rowNum, fieldName);
+          }
         }
       },
     },
@@ -35,10 +57,30 @@ const TEST_DEFINITIONS = {
       testFunction(testData, sheetNumber, rowNum, fieldName, testMetadata) {
         if (testMetadata.MIN_CHAR_LEN) {
           if (testData.length < testMetadata.MIN_CHAR_LEN) {
-            TestUtils.dispatchTestItemAction(this.id, sheetNumber, rowNum, fieldName);
+            TestUtils.dispatchTestItemAction(
+              this.id,
+              `${this.description} (Exists:${testData.length}/Min_Allowed:${testMetadata.MIN_CHAR_LEN})`,
+              false,
+              sheetNumber,
+              rowNum,
+              fieldName
+            );
+          } else {
+            TestUtils.dispatchTestItemAction(this.id, '', true, sheetNumber, rowNum, fieldName);
           }
-        } else if (testData.length < this.metadata.MIN_CHAR_LEN) {
-          TestUtils.dispatchTestItemAction(this.id, sheetNumber, rowNum, fieldName);
+        } else {
+          if (testData.length < this.metadata.MIN_CHAR_LEN) {
+            TestUtils.dispatchTestItemAction(
+              this.id,
+              `${this.description} (Exists:${testData.length}/Min_Allowed:${this.metadata.MIN_CHAR_LEN})`,
+              false,
+              sheetNumber,
+              rowNum,
+              fieldName
+            );
+          } else {
+            TestUtils.dispatchTestItemAction(this.id, '', true, sheetNumber, rowNum, fieldName);
+          }
         }
       },
     },
@@ -56,10 +98,12 @@ const TEST_DEFINITIONS = {
           fieldName,
           testMetadata,
           TestUtils.onErrorLoadingTheImage,
-          this.onImageLoadedCallback
+          this.onImageLoadedCallback.bind(this)
         );
       },
-      onImageLoadedCallback(...args) {},
+      onImageLoadedCallback(imgElement, sheetNumber, rowNum, fieldName, testMetadata) {
+        TestUtils.dispatchTestItemAction(this.id, '', true, sheetNumber, rowNum, fieldName);
+      },
     },
 
     TEST_IMAGE_DIMENSIONS_INCORRECT: {
@@ -86,13 +130,33 @@ const TEST_DEFINITIONS = {
 
         if (DIMENSION_DESIRED_HEIGHT && DIMENSION_DESIRED_WIDTH) {
           if (imgElement.height !== DIMENSION_DESIRED_HEIGHT || imgElement.width !== DIMENSION_DESIRED_WIDTH) {
-            TestUtils.dispatchTestItemAction(this.id, sheetNumber, rowNum, fieldName);
+            TestUtils.dispatchTestItemAction(
+              this.id,
+              `${this.description} (Exists:${imgElement.height},${imgElement.width}/Allowed:${DIMENSION_DESIRED_HEIGHT},${DIMENSION_DESIRED_WIDTH})`,
+              false,
+              sheetNumber,
+              rowNum,
+              fieldName
+            );
+          } else {
+            TestUtils.dispatchTestItemAction(this.id, '', true, sheetNumber, rowNum, fieldName);
           }
-        } else if (
-          imgElement.width !== this.metadata.WIDTH_IN_PIXELS ||
-          imgElement.height !== this.metadata.HEIGHT_IN_PIXELS
-        ) {
-          TestUtils.dispatchTestItemAction(this.id, sheetNumber, rowNum, fieldName);
+        } else {
+          if (
+            imgElement.width !== this.metadata.WIDTH_IN_PIXELS ||
+            imgElement.height !== this.metadata.HEIGHT_IN_PIXELS
+          ) {
+            TestUtils.dispatchTestItemAction(
+              this.id,
+              `${this.description} (Exists:${imgElement.height},${imgElement.width}/Allowed:${this.metadata.HEIGHT_IN_PIXELS},${this.metadata.WIDTH_IN_PIXELS})`,
+              false,
+              sheetNumber,
+              rowNum,
+              fieldName
+            );
+          } else {
+            TestUtils.dispatchTestItemAction(this.id, '', true, sheetNumber, rowNum, fieldName);
+          }
         }
       },
     },
@@ -106,11 +170,29 @@ const TEST_DEFINITIONS = {
       testFunction(url, sheetNumber, rowNum, fieldName, testMetadata) {
         if (testMetadata.IMAGE_FORMATS_ALLOWED.length > 0) {
           if (!TestUtils.isImageUrlOfAllowedImageFormats(url, testMetadata.IMAGE_FORMATS_ALLOWED)) {
-            TestUtils.dispatchTestItemAction(this.id, sheetNumber, rowNum, fieldName);
+            TestUtils.dispatchTestItemAction(
+              this.id,
+              `${this.description} (Allowed:${testMetadata.IMAGE_FORMATS_ALLOWED.join()}`,
+              false,
+              sheetNumber,
+              rowNum,
+              fieldName
+            );
+          } else {
+            TestUtils.dispatchTestItemAction(this.id, '', true, sheetNumber, rowNum, fieldName);
           }
         } else {
           if (!TestUtils.isImageUrlOfAllowedImageFormats(url, this.metadata.IMAGE_FORMATS_ALLOWED)) {
-            TestUtils.dispatchTestItemAction(this.id, sheetNumber, rowNum, fieldName);
+            TestUtils.dispatchTestItemAction(
+              this.id,
+              `${this.description} (Allowed:${this.metadata.IMAGE_FORMATS_ALLOWED.join()}`,
+              false,
+              sheetNumber,
+              rowNum,
+              fieldName
+            );
+          } else {
+            TestUtils.dispatchTestItemAction(this.id, '', true, sheetNumber, rowNum, fieldName);
           }
         }
       },

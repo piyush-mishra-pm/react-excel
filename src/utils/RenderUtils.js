@@ -1,5 +1,5 @@
 import React from 'react';
-import _ from 'lodash';
+import _, {uniqueId} from 'lodash';
 
 import * as TestUtils from '../tests/TestUtils';
 import TEST_SETUP from '../tests/TEST_SETUP';
@@ -34,13 +34,20 @@ export function renderBodyCell(COL_NAME, row, rowIndex) {
     return (
       <td key={`${rowIndex}-${COL_NAME}`} className={row[COL_NAME].testResults.length ? 'negative' : ''}>
         {renderImageOrTextValue(row[COL_NAME].value)}{' '}
-        {/** todo: Show passed and failed test IDs.
-         * todo: Even if single check fails, mark red.
-         * todo: Show metadata of failed checks.
-         * todo: Show only ID of passed checks. */}
-        {row[COL_NAME].testResults.map((testID) => (
-          <div style={{color: 'red', fontFamily: 'monospace'}} key={`${rowIndex}-${COL_NAME}-${testID}`}>
-            {testID}
+        {row[COL_NAME].testResults.map((testResult) => (
+          <div
+            style={{color: testResult.testPassed ? 'green' : 'red', fontSize: '1rem', fontFamily: 'monospace'}}
+            key={uniqueId(
+              `${rowIndex}-${COL_NAME}-${testResult.testId}-${testResult.testResultMessage}-${testResult.testPassed}-`
+            )}
+          >
+            {testResult.testId}
+            {!testResult.testPassed && ': '}
+            {!testResult.testPassed && (
+              <p style={{color: 'grey', fontSize: '0.75rem', fontFamily: 'monospace'}}>
+                {testResult.testResultMessage}
+              </p>
+            )}
           </div>
         ))}
       </td>

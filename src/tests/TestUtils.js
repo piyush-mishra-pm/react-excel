@@ -4,7 +4,7 @@ import store from '../store/store';
 import ACTION_TYPES from '../store/ACTION_TYPES';
 import TEST_DEFINITIONS from './TEST_DEFINITIONS';
 
-export function dispatchTestItemAction(testId, sheetNumber, rowNum, fieldName) {
+export function dispatchTestItemAction(testId, testResultMessage, testPassed, sheetNumber, rowNum, fieldName) {
   // Get latest state picture, since last test check.
   // Each test check can dispatch (asyncronous) actions.
   // Hence we need the latest state per test.
@@ -14,7 +14,7 @@ export function dispatchTestItemAction(testId, sheetNumber, rowNum, fieldName) {
   let existingObjectStoredInField = rowWithError[fieldName];
 
   existingObjectStoredInField['testResults'] = _.cloneDeep(
-    _.union(existingObjectStoredInField['testResults'], [testId])
+    _.union(existingObjectStoredInField['testResults'], [{testId, testResultMessage, testPassed}])
   );
 
   store.dispatch({
@@ -50,7 +50,14 @@ export function getMeta(
 }
 
 export function onErrorLoadingTheImage(sheetNumber, rowNum, fieldName, testMetadata) {
-  dispatchTestItemAction(TEST_DEFINITIONS.TESTS.TEST_IMAGE_CANT_LOAD.id, sheetNumber, rowNum, fieldName);
+  dispatchTestItemAction(
+    TEST_DEFINITIONS.TESTS.TEST_IMAGE_CANT_LOAD.id,
+    TEST_DEFINITIONS.TESTS.TEST_IMAGE_CANT_LOAD.description,
+    false,
+    sheetNumber,
+    rowNum,
+    fieldName
+  );
 }
 
 export function isImageUrlOfAllowedImageFormats(

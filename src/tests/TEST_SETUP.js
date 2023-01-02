@@ -100,7 +100,7 @@ const TEST_SETUP = [
     columnConfigs: [
       // Text tests:
       {
-        columnNums: [0, 1, 2],
+        columnNums: [4, 5],
         testConfigs: [
           {
             testId: TEST_DEFINITIONS.TESTS.TEST_TEXT_EMPTY.id,
@@ -121,7 +121,7 @@ const TEST_SETUP = [
         ],
       },
       {
-        columnNums: [1],
+        columnNums: [7],
         testConfigs: [
           {
             testId: TEST_DEFINITIONS.TESTS.TEST_TEXT_EMPTY.id,
@@ -144,23 +144,56 @@ const TEST_SETUP = [
 
       // Image tests:
       {
-        columnNums: [4],
+        columnNums: [15, 16, 17],
         testConfigs: [
+          {
+            testId: TEST_DEFINITIONS.TESTS.TEST_TEXT_EMPTY.id,
+            testMedata: {},
+          },
           {
             testId: TEST_DEFINITIONS.TESTS.TEST_IMAGE_CANT_LOAD.id,
             testMedata: {},
           },
           {
+            testId: TEST_DEFINITIONS.TESTS.TEST_IMAGE_FORMAT_INCORRECT.id,
+            testMedata: {
+              IMAGE_FORMATS_ALLOWED: ['png', 'jpg'],
+            },
+          },
+        ],
+      },
+      {
+        columnNums: [15, 18],
+        testConfigs: [
+          {
+            testId: TEST_DEFINITIONS.TESTS.TEST_IMAGE_DIMENSIONS_INCORRECT.id,
+            testMedata: {
+              WIDTH_IN_PIXELS: 650,
+              HEIGHT_IN_PIXELS: 650,
+            },
+          },
+        ],
+      },
+      {
+        columnNums: [16],
+        testConfigs: [
+          {
+            testId: TEST_DEFINITIONS.TESTS.TEST_IMAGE_DIMENSIONS_INCORRECT.id,
+            testMedata: {
+              WIDTH_IN_PIXELS: 519,
+              HEIGHT_IN_PIXELS: 345,
+            },
+          },
+        ],
+      },
+      {
+        columnNums: [17],
+        testConfigs: [
+          {
             testId: TEST_DEFINITIONS.TESTS.TEST_IMAGE_DIMENSIONS_INCORRECT.id,
             testMedata: {
               WIDTH_IN_PIXELS: 1982,
               HEIGHT_IN_PIXELS: 856,
-            },
-          },
-          {
-            testId: TEST_DEFINITIONS.TESTS.TEST_IMAGE_FORMAT_INCORRECT.id,
-            testMedata: {
-              IMAGE_FORMATS_ALLOWED: ['png', 'jpg'],
             },
           },
         ],
