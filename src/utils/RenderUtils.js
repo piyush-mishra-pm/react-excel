@@ -32,7 +32,10 @@ export function renderImageOrTextValue(content) {
 export function renderBodyCell(COL_NAME, row, rowIndex) {
   if (row[COL_NAME].testResults) {
     return (
-      <td key={`${rowIndex}-${COL_NAME}`} className={row[COL_NAME].testResults.length ? 'negative' : ''}>
+      <td
+        key={`${rowIndex}-${COL_NAME}`}
+        className={hasAnyTestFailed(row[COL_NAME].testResults) ? 'negative' : 'positive'}
+      >
         {renderImageOrTextValue(row[COL_NAME].value)}{' '}
         {row[COL_NAME].testResults.map((testResult) => (
           <div
@@ -55,6 +58,10 @@ export function renderBodyCell(COL_NAME, row, rowIndex) {
   } else {
     return <td key={`${rowIndex}-${COL_NAME}`}>{renderImageOrTextValue(row[COL_NAME])}</td>;
   }
+}
+
+function hasAnyTestFailed(testResultsArray) {
+  return testResultsArray.find((testResult) => !testResult.testPassed);
 }
 
 export function renderHeaderRow(row, currentActiveSheetNumber) {
