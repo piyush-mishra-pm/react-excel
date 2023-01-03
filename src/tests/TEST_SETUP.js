@@ -13,36 +13,9 @@ const TEST_SETUP = [
             testMedata: {},
           },
           {
-            testId: TEST_DEFINITIONS.TESTS.TEST_TEXT_TOO_SHORT.id,
-            testMedata: {
-              MIN_CHAR_LEN: 170,
-            },
-          },
-          {
             testId: TEST_DEFINITIONS.TESTS.TEST_TEXT_TOO_LONG.id,
             testMedata: {
-              MAX_CHAR_LEN: 100,
-            },
-          },
-        ],
-      },
-      {
-        columnNums: [3],
-        testConfigs: [
-          {
-            testId: TEST_DEFINITIONS.TESTS.TEST_TEXT_EMPTY.id,
-            testMedata: {},
-          },
-          {
-            testId: TEST_DEFINITIONS.TESTS.TEST_TEXT_TOO_SHORT.id,
-            testMedata: {
-              MIN_CHAR_LEN: 10,
-            },
-          },
-          {
-            testId: TEST_DEFINITIONS.TESTS.TEST_TEXT_TOO_LONG.id,
-            testMedata: {
-              MAX_CHAR_LEN: 150,
+              MAX_CHAR_LEN: 120,
             },
           },
         ],
@@ -52,10 +25,6 @@ const TEST_SETUP = [
       {
         columnNums: [14],
         testConfigs: [
-          {
-            testId: TEST_DEFINITIONS.TESTS.TEST_IMAGE_CANT_LOAD.id,
-            testMedata: {},
-          },
           {
             testId: TEST_DEFINITIONS.TESTS.TEST_IMAGE_DIMENSIONS_INCORRECT.id,
             testMedata: {
@@ -74,10 +43,6 @@ const TEST_SETUP = [
       {
         columnNums: [15, 16],
         testConfigs: [
-          {
-            testId: TEST_DEFINITIONS.TESTS.TEST_IMAGE_CANT_LOAD.id,
-            testMedata: {},
-          },
           {
             testId: TEST_DEFINITIONS.TESTS.TEST_IMAGE_FORMAT_INCORRECT.id,
             testMedata: {
@@ -107,15 +72,9 @@ const TEST_SETUP = [
             testMedata: {},
           },
           {
-            testId: TEST_DEFINITIONS.TESTS.TEST_TEXT_TOO_SHORT.id,
-            testMedata: {
-              MIN_CHAR_LEN: 170,
-            },
-          },
-          {
             testId: TEST_DEFINITIONS.TESTS.TEST_TEXT_TOO_LONG.id,
             testMedata: {
-              MAX_CHAR_LEN: 10,
+              MAX_CHAR_LEN: 120,
             },
           },
         ],
@@ -128,15 +87,20 @@ const TEST_SETUP = [
             testMedata: {},
           },
           {
-            testId: TEST_DEFINITIONS.TESTS.TEST_TEXT_TOO_SHORT.id,
-            testMedata: {
-              MIN_CHAR_LEN: 170,
-            },
-          },
-          {
             testId: TEST_DEFINITIONS.TESTS.TEST_TEXT_TOO_LONG.id,
             testMedata: {
-              MAX_CHAR_LEN: 11,
+              MAX_CHAR_LEN: 120,
+            },
+          },
+        ],
+      },
+      {
+        columnNums: [11, 12],
+        testConfigs: [
+          {
+            testId: TEST_DEFINITIONS.TESTS.TEST_TEXT_ENUM_MATCHES.id,
+            testMedata: {
+              ALLOWED_VALUES: ['Y', 'N'],
             },
           },
         ],
@@ -148,10 +112,6 @@ const TEST_SETUP = [
         testConfigs: [
           {
             testId: TEST_DEFINITIONS.TESTS.TEST_TEXT_EMPTY.id,
-            testMedata: {},
-          },
-          {
-            testId: TEST_DEFINITIONS.TESTS.TEST_IMAGE_CANT_LOAD.id,
             testMedata: {},
           },
           {
@@ -194,6 +154,64 @@ const TEST_SETUP = [
             testMedata: {
               WIDTH_IN_PIXELS: 1982,
               HEIGHT_IN_PIXELS: 856,
+            },
+          },
+        ],
+      },
+    ],
+  },
+  {
+    sheetNum: 3,
+    columnConfigs: [
+      // Text tests:
+      {
+        columnNums: [6, 8, 9, 11],
+        testConfigs: [
+          {
+            testId: TEST_DEFINITIONS.TESTS.TEST_TEXT_EMPTY.id,
+            testMedata: {},
+          },
+          {
+            testId: TEST_DEFINITIONS.TESTS.TEST_TEXT_TOO_LONG.id,
+            testMedata: {
+              MAX_CHAR_LEN: 190,
+            },
+          },
+        ],
+      },
+
+      // Image tests:
+      {
+        columnNums: [13, 15],
+        testConfigs: [
+          {
+            testId: TEST_DEFINITIONS.TESTS.TEST_IMAGE_FORMAT_INCORRECT.id,
+            testMedata: {
+              IMAGE_FORMATS_ALLOWED: ['png', 'jpg'],
+            },
+          },
+        ],
+      },
+      {
+        columnNums: [13],
+        testConfigs: [
+          {
+            testId: TEST_DEFINITIONS.TESTS.TEST_IMAGE_DIMENSIONS_INCORRECT.id,
+            testMedata: {
+              WIDTH_IN_PIXELS: 650,
+              HEIGHT_IN_PIXELS: 650,
+            },
+          },
+        ],
+      },
+      {
+        columnNums: [15],
+        testConfigs: [
+          {
+            testId: TEST_DEFINITIONS.TESTS.TEST_IMAGE_DIMENSIONS_INCORRECT.id,
+            testMedata: {
+              WIDTH_IN_PIXELS: 519,
+              HEIGHT_IN_PIXELS: 345,
             },
           },
         ],

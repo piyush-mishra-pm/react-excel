@@ -21,12 +21,18 @@ function performTextTests(state) {
       for (const COLUMN_CONFIG of COLUMN_CONFIG_OBJECTS) {
         for (const COLUMN_NUM of COLUMN_CONFIG.columnNums) {
           let fieldData = _.cloneDeep(row[ROW_KEYS[COLUMN_NUM]]);
-          if (fieldData) fieldData = fieldData.trim();
+          //if (fieldData) fieldData = fieldData.trim();
           const fieldName = ROW_KEYS[COLUMN_NUM];
           for (const testConfig of COLUMN_CONFIG.testConfigs) {
             // id is unique to every test, so there can only be one test found.
-            const foundTestDefinition = _.filter(TEST_DEFINITIONS.TESTS, key => key.id === testConfig.testId)[0];
-            foundTestDefinition.testFunction(_.cloneDeep(fieldData), _.cloneDeep(sheetNumber), _.cloneDeep(rowNum), _.cloneDeep(fieldName), _.cloneDeep(testConfig.testMedata));
+            const foundTestDefinition = _.filter(TEST_DEFINITIONS.TESTS, (key) => key.id === testConfig.testId)[0];
+            foundTestDefinition.testFunction(
+              _.cloneDeep(fieldData),
+              _.cloneDeep(sheetNumber),
+              _.cloneDeep(rowNum),
+              _.cloneDeep(fieldName),
+              _.cloneDeep(testConfig.testMedata)
+            );
           }
         }
       }

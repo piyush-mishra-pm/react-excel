@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 import * as TestUtils from './TestUtils';
 
 const TEST_DEFINITIONS = {
@@ -70,6 +72,41 @@ const TEST_DEFINITIONS = {
           }
         } else {
           if (testData.length < this.metadata.MIN_CHAR_LEN) {
+            TestUtils.dispatchTestItemAction(
+              this.id,
+              `${this.description} (Exists:${testData.length}/Min_Allowed:${this.metadata.MIN_CHAR_LEN})`,
+              false,
+              sheetNumber,
+              rowNum,
+              fieldName
+            );
+          } else {
+            TestUtils.dispatchTestItemAction(this.id, '', true, sheetNumber, rowNum, fieldName);
+          }
+        }
+      },
+    },
+
+    TEST_TEXT_ENUM_MATCHES: {
+      id: 'TEST_TEXT_ENUM_MATCHES',
+      description: 'Text not defined in possible text values.',
+      metadata: {ALLOWED_VALUES: ['Y', 'N']},
+      testFunction(testData, sheetNumber, rowNum, fieldName, testMetadata) {
+        if (testMetadata.ALLOWED_VALUES && testMetadata.ALLOWED_VALUES.length > 0) {
+          if (!_.includes(testMetadata.ALLOWED_VALUES, testData)) {
+            TestUtils.dispatchTestItemAction(
+              this.id,
+              `${this.description} (Exists:${testData}/Allowed:${testMetadata.ALLOWED_VALUES.join(' ')})`,
+              false,
+              sheetNumber,
+              rowNum,
+              fieldName
+            );
+          } else {
+            TestUtils.dispatchTestItemAction(this.id, '', true, sheetNumber, rowNum, fieldName);
+          }
+        } else {
+          if (!_.includes(this.metadata.ALLOWED_VALUES, testData)) {
             TestUtils.dispatchTestItemAction(
               this.id,
               `${this.description} (Exists:${testData.length}/Min_Allowed:${this.metadata.MIN_CHAR_LEN})`,
