@@ -1,5 +1,6 @@
 import React from 'react';
 import _, {uniqueId} from 'lodash';
+import * as Diff from 'diff';
 
 import * as TestUtils from '../tests/TestUtils';
 import TEST_SETUP from '../tests/TEST_SETUP';
@@ -132,4 +133,52 @@ function renderArrayOrPrimitive(content) {
   if (Array.isArray(content)) {
     return content.join();
   } else return content;
+}
+
+export function renderSchemaLevelChecks(sheetLevelSchemaTestResults) {
+  return (
+    <div>
+      Schema Level checks:
+      {sheetLevelSchemaTestResults.map((testResult, index) => (
+        <div className={`ui ${testResult.testPassed ? 'positive' : 'negative'} message`} key={_.uniqueId(index)}>
+          <p>{testResult.testId}</p>
+          {/** Only show metadata if failed schema tests */}
+          {!testResult.testPassed && (
+            <div>
+              <div className="header">Expected:</div>
+              <div>{testResult.testResultMetadata.allowedColumnNames.join('\t|\t')}</div>
+              <div className="header">Existing:</div>
+              <div>{testResult.testResultMetadata.existingColumnNames.join('\t|\t')}</div>
+              <div className="header">Difference:</div>
+              <div>
+                {Diff.diffArrays(
+                  testResult.testResultMetadata.allowedColumnNames,
+                  testResult.testResultMetadata.existingColumnNames
+                ).map((diffResult, iOut) => (
+                  <div key={_.uniqueId(iOut)}>
+                    {diffResult.value.map((item, iIn) => (
+                      <div
+                        className={`ui ${diffResult.added ? 'orange' : diffResult.removed ? 'red' : 'green'} label`}
+                        key={_.uniqueId(iIn)}
+                      >
+                        {item}
+                      </div>
+                    ))}
+                  </div>
+                ))}
+              </div>
+              <div className="ui container segment">
+                <div className="header">Legend:</div>
+                <div>
+                  <div className="ui green label">Exact Match</div>
+                  <div className="ui red label">Missing Column</div>
+                  <div className="ui orange label">Extra Column</div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
+  );
 }

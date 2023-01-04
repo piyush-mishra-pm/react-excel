@@ -28,6 +28,23 @@ export function dispatchTestItemAction(testId, testResultMessage, testPassed, sh
   });
 }
 
+export function dispatchTestSchemaAction(testId, testResultMessage, testPassed, sheetNumber, testResultMetadata = {}) {
+  const state = store.getState();
+  const sheetWithSchemaTestErrors = state.root.testResultsData[sheetNumber];
+
+  sheetWithSchemaTestErrors['testResults'] = _.cloneDeep(
+    _.union(sheetWithSchemaTestErrors['testResults'], [{testId, testResultMessage, testPassed, testResultMetadata}])
+  );
+
+  store.dispatch({
+    type: ACTION_TYPES.TEST_SPREADSHEET_SCHEMA,
+    payload: {
+      testResults: _.cloneDeep(sheetWithSchemaTestErrors.testResults),
+      sheet: _.cloneDeep(sheetNumber),
+    },
+  });
+}
+
 export function getMeta(
   url,
   sheetNumber,
@@ -73,4 +90,31 @@ export function isImageUrlOfAllowedImageFormats(
 
 export function isPngImage(url) {
   return isImageUrlOfAllowedImageFormats(url, ['png']);
+}
+
+export function getDifferingColumnNames(colNames1, colNames2) {
+  // Checking Number of Columns as same:
+  if (colNames1.length !== colNames2.length) return _.difference(colNames1, colNames2);
+  // Checking column names not be different:
+  else if (_.difference(colNames1, colNames2).length > 0) return _.difference(colNames1, colNames2);
+  // Checking column name or order are different:
+  else {
+    let unmatchedCols = [];
+    for (let i = 0; i < colNames1.length; i++) {
+      if (colNames1[i] !== colNames2[i]) {
+        unmatchedCols.push({colNames1, colNames2});
+      }
+    }
+    if (unmatchedCols.length > 0) return unmatchedCols;
+    // todo: check column data type too (String, number, Image url, etc.)?
+    return null;
+  }
+}
+
+export function getColumnNames(state, sheetNum, rowNum) {
+  return Object.keys(state.root.importedData[sheetNum][rowNum]);
+}
+
+export function findTestFunctionByTestId(testId) {
+  return _.filter(TEST_DEFINITIONS.TESTS, (key) => key.id === testId)[0];
 }

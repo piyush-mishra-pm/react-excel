@@ -4,6 +4,7 @@ import * as TestUtils from './TestUtils';
 
 const TEST_DEFINITIONS = {
   TESTS: {
+    // Text Tests:
     TEST_TEXT_EMPTY: {
       id: 'TEST_TEXT_EMPTY',
       description: 'text is empty.',
@@ -230,6 +231,86 @@ const TEST_DEFINITIONS = {
             );
           } else {
             TestUtils.dispatchTestItemAction(this.id, '', true, sheetNumber, rowNum, fieldName);
+          }
+        }
+      },
+    },
+
+    // Schema Tests:
+    TEST_SCHEMA_MATCH_COL_NAMES: {
+      id: 'TEST_SCHEMA_MATCH_COL_NAMES',
+      description: 'Schema mismatching.',
+      metadata: {
+        columnNames: [
+          'Recommendation ID',
+          'Category',
+          'ORIGINAL\nlocale',
+          'ORIGINAL\ntitle',
+          'ORIGINAL\ndescription ',
+          'Utility Defined Locale',
+          'Utility Defined Title',
+          'Utility Defined Description',
+          'FCR \n(Y/N)',
+          'Program Reco (Y/N)',
+          'Tags\n(OBSOLETE COLUMN, DO NOT USE)',
+          'Call To Action Text (To appear on the button to link, eg, "Enroll Now" or "Purchase Here")',
+          'Link (To a detailed reco page, third-party product site, or utility program)',
+          'CallToActionStyle - 0 is orange button, 1 is blue or white button\n(OBSOLETE COLUMN, DO NOT USE)',
+          'Icon - (must be transparent so it works against the colored background in emails and responsive web pages)\n(Max link length = 250 char)',
+          'Live Images - Thumbnail Res\n(Max link length = 250 char)',
+          'Live Images - Elongated Res\n(Max link length = 250 char)',
+          'Live Images - Shortened Res\n(Max link length = 250 char)',
+          'Channel',
+          '__EMPTY',
+          '__EMPTY_1',
+        ],
+      },
+      testFunction(existingColumnNames, sheetNumber, testMetadata) {
+        if (testMetadata && testMetadata.columnNames) {
+          const columnNameDiff = TestUtils.getDifferingColumnNames(existingColumnNames, testMetadata.columnNames);
+          if (!columnNameDiff || columnNameDiff.length === 0) {
+            TestUtils.dispatchTestSchemaAction(this.id, '', true, sheetNumber, {
+              existingColumnNames,
+              allowedColumnNames: testMetadata.columnNames,
+              columnNameDiff,
+            });
+          } else {
+            TestUtils.dispatchTestSchemaAction(
+              this.id,
+              `${
+                this.description
+              } (Allowed:${testMetadata.columnNames.join()} \n\nExisting:${existingColumnNames.join()}`,
+              false,
+              sheetNumber,
+              {
+                existingColumnNames,
+                allowedColumnNames: testMetadata.columnNames,
+                columnNameDiff,
+              }
+            );
+          }
+        } else {
+          const columnNameDiff = TestUtils.getDifferingColumnNames(existingColumnNames, this.metadata.columnNames);
+          if (!columnNameDiff || columnNameDiff.length === 0) {
+            TestUtils.dispatchTestSchemaAction(this.id, '', true, sheetNumber, {
+              existingColumnNames,
+              allowedColumnNames: this.metadata.columnNames,
+              columnNameDiff,
+            });
+          } else {
+            TestUtils.dispatchTestSchemaAction(
+              this.id,
+              `${
+                this.description
+              } (Allowed: ${this.metadata.columnNames.join()} \n\nExisting:${existingColumnNames.join()}`,
+              false,
+              sheetNumber,
+              {
+                existingColumnNames,
+                allowedColumnNames: this.metadata.columnNames,
+                columnNameDiff,
+              }
+            );
           }
         }
       },

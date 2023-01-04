@@ -23,6 +23,17 @@ function SpreadSheetReducer(state = INITIAL_STATE, action) {
       state.testResultsData = INITIAL_STATE.testResultsData;
       break;
 
+    case ACTION_TYPES.TEST_SCHEMA_INIT:
+      state.testResultsDataSchemaLevel = getInitSchemaTestData(state.importedData);
+      break;
+
+    case ACTION_TYPES.TEST_SPREADSHEET_SCHEMA:
+      state.testResultsDataSchemaLevel = modifySchemaTestResultsBySheet(
+        state.testResultsDataSchemaLevel,
+        action.payload
+      );
+      break;
+
     default:
       break;
   }
@@ -40,11 +51,25 @@ function getInitTestData(importedData) {
   for (const sheet in importedData) {
     for (const row in importedData[sheet]) {
       for (const field of Object.keys(importedData[sheet][row])) {
-        initTestData[sheet][row][field] = { value: importedData[sheet][row][field] || null, testResults: [] };
+        initTestData[sheet][row][field] = {value: importedData[sheet][row][field] || null, testResults: []};
       }
     }
   }
   return initTestData;
+}
+
+function getInitSchemaTestData(importedData) {
+  const clonedImportedData = _.cloneDeep(importedData);
+  const initSchemaTestData = [];
+  for (const key in clonedImportedData) {
+    initSchemaTestData[key] = {schemaTestResults: {}};
+  }
+  return initSchemaTestData;
+}
+
+function modifySchemaTestResultsBySheet(testResultsDataSchemaLevel, payload) {
+  testResultsDataSchemaLevel[payload.sheet].schemaTestResults = payload.testResults;
+  return testResultsDataSchemaLevel;
 }
 
 export default SpreadSheetReducer;
