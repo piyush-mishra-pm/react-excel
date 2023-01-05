@@ -2,25 +2,30 @@ import _ from 'lodash';
 
 import store from '../store/store';
 import ACTION_TYPES from '../store/ACTION_TYPES';
-import TEST_DEFINITIONS from './TEST_DEFINITIONS';
+import TEST_DEFINITIONS, {TEST_STATUS} from './TEST_DEFINITIONS';
 
-export function dispatchTestItemAction(testId, testResultMessage, testPassed, sheetNumber, rowNum, fieldName) {
+export function dispatchTestItemAction(testId, testResultMessage, testStatus, sheetNumber, rowNum, fieldName) {
   // Get latest state picture, since last test check.
   // Each test check can dispatch (asyncronous) actions.
   // Hence we need the latest state per test.
   const state = store.getState();
   const sheetWithError = state.root.testResultsData[sheetNumber];
   const rowWithError = sheetWithError[rowNum];
-  let existingObjectStoredInField = rowWithError[fieldName];
-
+  let existingObjectStoredInField = _.cloneDeep(rowWithError[fieldName]);
+  //console.log(existingObjectStoredInField);
   existingObjectStoredInField['testResults'] = _.cloneDeep(
-    _.union(existingObjectStoredInField['testResults'], [{testId, testResultMessage, testPassed}])
+    _.uniqBy(
+      _.compact(
+        _.concat(_.cloneDeep({testId, testResultMessage, testStatus}), existingObjectStoredInField['testResults'])
+      ),
+      'testId'
+    )
   );
 
   store.dispatch({
     type: ACTION_TYPES.TEST_SPREADSHEET_ITEM,
     payload: {
-      testResults: _.cloneDeep(existingObjectStoredInField.testResults),
+      testResults: _.cloneDeep(existingObjectStoredInField['testResults']),
       sheet: _.cloneDeep(sheetNumber),
       row: _.cloneDeep(rowNum),
       field: _.cloneDeep(fieldName),
@@ -28,18 +33,26 @@ export function dispatchTestItemAction(testId, testResultMessage, testPassed, sh
   });
 }
 
-export function dispatchTestSchemaAction(testId, testResultMessage, testPassed, sheetNumber, testResultMetadata = {}) {
+export function dispatchTestSchemaAction(testId, testResultMessage, testStatus, sheetNumber, testResultMetadata = {}) {
   const state = store.getState();
-  const sheetWithSchemaTestErrors = state.root.testResultsData[sheetNumber];
+  const sheetWithSchemaTestErrors = _.cloneDeep(state.root.testResultsDataSchemaLevel[sheetNumber]);
 
   sheetWithSchemaTestErrors['testResults'] = _.cloneDeep(
-    _.union(sheetWithSchemaTestErrors['testResults'], [{testId, testResultMessage, testPassed, testResultMetadata}])
+    _.uniqBy(
+      _.compact(
+        _.concat(
+          _.cloneDeep({testId, testResultMessage, testStatus, testResultMetadata}),
+          sheetWithSchemaTestErrors['testResults']
+        )
+      ),
+      'testId'
+    )
   );
-
+  //console.log(sheetWithSchemaTestErrors);
   store.dispatch({
     type: ACTION_TYPES.TEST_SPREADSHEET_SCHEMA,
     payload: {
-      testResults: _.cloneDeep(sheetWithSchemaTestErrors.testResults),
+      testResults: _.cloneDeep(sheetWithSchemaTestErrors['testResults']),
       sheet: _.cloneDeep(sheetNumber),
     },
   });
@@ -52,7 +65,9 @@ export function getMeta(
   fieldName,
   testMetadata,
   onImageFailedLoadedCallback,
-  onImageLoadedCallback
+  onImageLoadedCallback,
+  sourceTestId,
+  sourceTestDescription
 ) {
   var img = new Image();
   img.addEventListener('load', function () {
@@ -61,20 +76,28 @@ export function getMeta(
   // todo: incorporate these checks too: https://stackoverflow.com/questions/1977871/check-if-an-image-is-loaded-no-errors-with-jquery
   // https://keith.gaughan.ie/detecting-broken-images-js.html
   img.addEventListener('error', function () {
-    onImageFailedLoadedCallback(sheetNumber, rowNum, fieldName, testMetadata);
+    onImageFailedLoadedCallback(sourceTestId, sourceTestDescription, sheetNumber, rowNum, fieldName, testMetadata);
   });
   img.src = url;
 }
 
-export function onErrorLoadingTheImage(sheetNumber, rowNum, fieldName, testMetadata) {
+export function onErrorLoadingTheImage(
+  sourceTestId,
+  sourceTestDescription,
+  sheetNumber,
+  rowNum,
+  fieldName,
+  testMetadata
+) {
   dispatchTestItemAction(
     TEST_DEFINITIONS.TESTS.TEST_IMAGE_CANT_LOAD.id,
     TEST_DEFINITIONS.TESTS.TEST_IMAGE_CANT_LOAD.description,
-    false,
+    TEST_STATUS.TEST_FAILED,
     sheetNumber,
     rowNum,
     fieldName
   );
+  dispatchTestItemAction(sourceTestId, sourceTestDescription, TEST_STATUS.TEST_FAILED, sheetNumber, rowNum, fieldName);
 }
 
 export function isImageUrlOfAllowedImageFormats(

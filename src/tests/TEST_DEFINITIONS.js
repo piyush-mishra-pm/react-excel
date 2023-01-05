@@ -11,9 +11,17 @@ const TEST_DEFINITIONS = {
       metadata: {},
       testFunction(testData, sheetNumber, rowNum, fieldName, testMetadata) {
         if (!testData) {
-          TestUtils.dispatchTestItemAction(this.id, this.description, false, sheetNumber, rowNum, fieldName);
+          TestUtils.dispatchTestItemAction(
+            this.id,
+            this.description,
+            TEST_STATUS.TEST_FAILED,
+            sheetNumber,
+            rowNum,
+            fieldName
+          );
+          return;
         } else {
-          TestUtils.dispatchTestItemAction(this.id, '', true, sheetNumber, rowNum, fieldName);
+          TestUtils.dispatchTestItemAction(this.id, '', TEST_STATUS.TEST_PASSED, sheetNumber, rowNum, fieldName);
         }
       },
     },
@@ -28,26 +36,26 @@ const TEST_DEFINITIONS = {
             TestUtils.dispatchTestItemAction(
               this.id,
               `${this.description} (Exists:${testData.length}/Max_Allowed:${testMetadata.MAX_CHAR_LEN})`,
-              false,
+              TEST_STATUS.TEST_FAILED,
               sheetNumber,
               rowNum,
               fieldName
             );
           } else {
-            TestUtils.dispatchTestItemAction(this.id, '', true, sheetNumber, rowNum, fieldName);
+            TestUtils.dispatchTestItemAction(this.id, '', TEST_STATUS.TEST_PASSED, sheetNumber, rowNum, fieldName);
           }
         } else {
           if (testData.length > this.metadata.MAX_CHAR_LEN) {
             TestUtils.dispatchTestItemAction(
               this.id,
               `${this.description} (Exists:${testData.length}/Max_Allowed:${this.metadata.MAX_CHAR_LEN})`,
-              false,
+              TEST_STATUS.TEST_FAILED,
               sheetNumber,
               rowNum,
               fieldName
             );
           } else {
-            TestUtils.dispatchTestItemAction(this.id, '', true, sheetNumber, rowNum, fieldName);
+            TestUtils.dispatchTestItemAction(this.id, '', TEST_STATUS.TEST_PASSED, sheetNumber, rowNum, fieldName);
           }
         }
       },
@@ -63,26 +71,26 @@ const TEST_DEFINITIONS = {
             TestUtils.dispatchTestItemAction(
               this.id,
               `${this.description} (Exists:${testData.length}/Min_Allowed:${testMetadata.MIN_CHAR_LEN})`,
-              false,
+              TEST_STATUS.TEST_FAILED,
               sheetNumber,
               rowNum,
               fieldName
             );
           } else {
-            TestUtils.dispatchTestItemAction(this.id, '', true, sheetNumber, rowNum, fieldName);
+            TestUtils.dispatchTestItemAction(this.id, '', TEST_STATUS.TEST_PASSED, sheetNumber, rowNum, fieldName);
           }
         } else {
           if (testData.length < this.metadata.MIN_CHAR_LEN) {
             TestUtils.dispatchTestItemAction(
               this.id,
               `${this.description} (Exists:${testData.length}/Min_Allowed:${this.metadata.MIN_CHAR_LEN})`,
-              false,
+              TEST_STATUS.TEST_FAILED,
               sheetNumber,
               rowNum,
               fieldName
             );
           } else {
-            TestUtils.dispatchTestItemAction(this.id, '', true, sheetNumber, rowNum, fieldName);
+            TestUtils.dispatchTestItemAction(this.id, '', TEST_STATUS.TEST_PASSED, sheetNumber, rowNum, fieldName);
           }
         }
       },
@@ -93,31 +101,42 @@ const TEST_DEFINITIONS = {
       description: 'Text not defined in possible text values.',
       metadata: {ALLOWED_VALUES: ['Y', 'N']},
       testFunction(testData, sheetNumber, rowNum, fieldName, testMetadata) {
+        if (!testData) {
+          TestUtils.dispatchTestItemAction(
+            this.id,
+            TEST_DEFINITIONS.TESTS.TEST_TEXT_EMPTY.description,
+            TEST_STATUS.TEST_FAILED,
+            sheetNumber,
+            rowNum,
+            fieldName
+          );
+          return;
+        }
         if (testMetadata.ALLOWED_VALUES && testMetadata.ALLOWED_VALUES.length > 0) {
           if (!_.includes(testMetadata.ALLOWED_VALUES, testData)) {
             TestUtils.dispatchTestItemAction(
               this.id,
               `${this.description} (Exists:${testData}/Allowed:${testMetadata.ALLOWED_VALUES.join(' ')})`,
-              false,
+              TEST_STATUS.TEST_FAILED,
               sheetNumber,
               rowNum,
               fieldName
             );
           } else {
-            TestUtils.dispatchTestItemAction(this.id, '', true, sheetNumber, rowNum, fieldName);
+            TestUtils.dispatchTestItemAction(this.id, '', TEST_STATUS.TEST_PASSED, sheetNumber, rowNum, fieldName);
           }
         } else {
           if (!_.includes(this.metadata.ALLOWED_VALUES, testData)) {
             TestUtils.dispatchTestItemAction(
               this.id,
               `${this.description} (Exists:${testData.length}/Min_Allowed:${this.metadata.MIN_CHAR_LEN})`,
-              false,
+              TEST_STATUS.TEST_FAILED,
               sheetNumber,
               rowNum,
               fieldName
             );
           } else {
-            TestUtils.dispatchTestItemAction(this.id, '', true, sheetNumber, rowNum, fieldName);
+            TestUtils.dispatchTestItemAction(this.id, '', TEST_STATUS.TEST_PASSED, sheetNumber, rowNum, fieldName);
           }
         }
       },
@@ -129,6 +148,19 @@ const TEST_DEFINITIONS = {
       metadata: {},
       description: 'cant load image.',
       testFunction(url, sheetNumber, rowNum, fieldName, testMetadata) {
+        if (!url) {
+          TestUtils.dispatchTestItemAction(
+            this.id,
+            TEST_DEFINITIONS.TESTS.TEST_TEXT_EMPTY.description,
+            TEST_STATUS.TEST_FAILED,
+            sheetNumber,
+            rowNum,
+            fieldName
+          );
+          return;
+        }
+
+        TestUtils.dispatchTestItemAction(this.id, '', TEST_STATUS.TEST_LOADING, sheetNumber, rowNum, fieldName);
         TestUtils.getMeta(
           url,
           sheetNumber,
@@ -136,11 +168,13 @@ const TEST_DEFINITIONS = {
           fieldName,
           testMetadata,
           TestUtils.onErrorLoadingTheImage,
-          this.onImageLoadedCallback.bind(this)
+          this.onImageLoadedCallback.bind(this),
+          this.id,
+          TEST_DEFINITIONS.TESTS.TEST_IMAGE_CANT_LOAD.description
         );
       },
       onImageLoadedCallback(imgElement, sheetNumber, rowNum, fieldName, testMetadata) {
-        TestUtils.dispatchTestItemAction(this.id, '', true, sheetNumber, rowNum, fieldName);
+        TestUtils.dispatchTestItemAction(this.id, '', TEST_STATUS.TEST_PASSED, sheetNumber, rowNum, fieldName);
       },
     },
 
@@ -152,6 +186,18 @@ const TEST_DEFINITIONS = {
         HEIGHT_IN_PIXELS: 650,
       },
       testFunction(url, sheetNumber, rowNum, fieldName, testMetadata) {
+        if (!url) {
+          TestUtils.dispatchTestItemAction(
+            this.id,
+            TEST_DEFINITIONS.TESTS.TEST_TEXT_EMPTY.description,
+            TEST_STATUS.TEST_FAILED,
+            sheetNumber,
+            rowNum,
+            fieldName
+          );
+          return;
+        }
+        TestUtils.dispatchTestItemAction(this.id, '', TEST_STATUS.TEST_LOADING, sheetNumber, rowNum, fieldName);
         TestUtils.getMeta(
           url,
           sheetNumber,
@@ -159,7 +205,9 @@ const TEST_DEFINITIONS = {
           fieldName,
           testMetadata,
           TestUtils.onErrorLoadingTheImage,
-          this.onImageLoadedCallback.bind(this)
+          this.onImageLoadedCallback.bind(this),
+          this.id,
+          TEST_DEFINITIONS.TESTS.TEST_IMAGE_CANT_LOAD.description
         );
       },
       onImageLoadedCallback(imgElement, sheetNumber, rowNum, fieldName, testMetadata) {
@@ -171,13 +219,13 @@ const TEST_DEFINITIONS = {
             TestUtils.dispatchTestItemAction(
               this.id,
               `${this.description} (Exists:${imgElement.height},${imgElement.width}/Allowed:${DIMENSION_DESIRED_HEIGHT},${DIMENSION_DESIRED_WIDTH})`,
-              false,
+              TEST_STATUS.TEST_FAILED,
               sheetNumber,
               rowNum,
               fieldName
             );
           } else {
-            TestUtils.dispatchTestItemAction(this.id, '', true, sheetNumber, rowNum, fieldName);
+            TestUtils.dispatchTestItemAction(this.id, '', TEST_STATUS.TEST_PASSED, sheetNumber, rowNum, fieldName);
           }
         } else {
           if (
@@ -187,13 +235,13 @@ const TEST_DEFINITIONS = {
             TestUtils.dispatchTestItemAction(
               this.id,
               `${this.description} (Exists:${imgElement.height},${imgElement.width}/Allowed:${this.metadata.HEIGHT_IN_PIXELS},${this.metadata.WIDTH_IN_PIXELS})`,
-              false,
+              TEST_STATUS.TEST_FAILED,
               sheetNumber,
               rowNum,
               fieldName
             );
           } else {
-            TestUtils.dispatchTestItemAction(this.id, '', true, sheetNumber, rowNum, fieldName);
+            TestUtils.dispatchTestItemAction(this.id, '', TEST_STATUS.TEST_PASSED, sheetNumber, rowNum, fieldName);
           }
         }
       },
@@ -206,31 +254,42 @@ const TEST_DEFINITIONS = {
         IMAGE_FORMATS_ALLOWED: ['png', 'jpg', 'jpeg'],
       },
       testFunction(url, sheetNumber, rowNum, fieldName, testMetadata) {
+        if (!url) {
+          TestUtils.dispatchTestItemAction(
+            this.id,
+            TEST_DEFINITIONS.TESTS.TEST_TEXT_EMPTY.description,
+            TEST_STATUS.TEST_FAILED,
+            sheetNumber,
+            rowNum,
+            fieldName
+          );
+          return;
+        }
         if (testMetadata.IMAGE_FORMATS_ALLOWED.length > 0) {
           if (!TestUtils.isImageUrlOfAllowedImageFormats(url, testMetadata.IMAGE_FORMATS_ALLOWED)) {
             TestUtils.dispatchTestItemAction(
               this.id,
               `${this.description} (Allowed:${testMetadata.IMAGE_FORMATS_ALLOWED.join()}`,
-              false,
+              TEST_STATUS.TEST_FAILED,
               sheetNumber,
               rowNum,
               fieldName
             );
           } else {
-            TestUtils.dispatchTestItemAction(this.id, '', true, sheetNumber, rowNum, fieldName);
+            TestUtils.dispatchTestItemAction(this.id, '', TEST_STATUS.TEST_PASSED, sheetNumber, rowNum, fieldName);
           }
         } else {
           if (!TestUtils.isImageUrlOfAllowedImageFormats(url, this.metadata.IMAGE_FORMATS_ALLOWED)) {
             TestUtils.dispatchTestItemAction(
               this.id,
               `${this.description} (Allowed:${this.metadata.IMAGE_FORMATS_ALLOWED.join()}`,
-              false,
+              TEST_STATUS.TEST_FAILED,
               sheetNumber,
               rowNum,
               fieldName
             );
           } else {
-            TestUtils.dispatchTestItemAction(this.id, '', true, sheetNumber, rowNum, fieldName);
+            TestUtils.dispatchTestItemAction(this.id, '', TEST_STATUS.TEST_PASSED, sheetNumber, rowNum, fieldName);
           }
         }
       },
@@ -266,10 +325,18 @@ const TEST_DEFINITIONS = {
         ],
       },
       testFunction(existingColumnNames, sheetNumber, testMetadata) {
+        if (!existingColumnNames) {
+          TestUtils.dispatchTestSchemaAction(this.id, 'empty column names', TEST_STATUS.TEST_FAILED, sheetNumber, {
+            existingColumnNames: [],
+            allowedColumnNames: testMetadata.columnNames,
+            columnNameDiff: [],
+          });
+          return;
+        }
         if (testMetadata && testMetadata.columnNames) {
           const columnNameDiff = TestUtils.getDifferingColumnNames(existingColumnNames, testMetadata.columnNames);
           if (!columnNameDiff || columnNameDiff.length === 0) {
-            TestUtils.dispatchTestSchemaAction(this.id, '', true, sheetNumber, {
+            TestUtils.dispatchTestSchemaAction(this.id, '', TEST_STATUS.TEST_PASSED, sheetNumber, {
               existingColumnNames,
               allowedColumnNames: testMetadata.columnNames,
               columnNameDiff,
@@ -280,7 +347,7 @@ const TEST_DEFINITIONS = {
               `${
                 this.description
               } (Allowed:${testMetadata.columnNames.join()} \n\nExisting:${existingColumnNames.join()}`,
-              false,
+              TEST_STATUS.TEST_FAILED,
               sheetNumber,
               {
                 existingColumnNames,
@@ -292,7 +359,7 @@ const TEST_DEFINITIONS = {
         } else {
           const columnNameDiff = TestUtils.getDifferingColumnNames(existingColumnNames, this.metadata.columnNames);
           if (!columnNameDiff || columnNameDiff.length === 0) {
-            TestUtils.dispatchTestSchemaAction(this.id, '', true, sheetNumber, {
+            TestUtils.dispatchTestSchemaAction(this.id, '', TEST_STATUS.TEST_PASSED, sheetNumber, {
               existingColumnNames,
               allowedColumnNames: this.metadata.columnNames,
               columnNameDiff,
@@ -303,7 +370,7 @@ const TEST_DEFINITIONS = {
               `${
                 this.description
               } (Allowed: ${this.metadata.columnNames.join()} \n\nExisting:${existingColumnNames.join()}`,
-              false,
+              TEST_STATUS.TEST_FAILED,
               sheetNumber,
               {
                 existingColumnNames,
@@ -317,5 +384,13 @@ const TEST_DEFINITIONS = {
     },
   },
 };
+
+const TEST_STATUS = {
+  TEST_PASSED: 'TEST_PASSED',
+  TEST_FAILED: 'TEST_FAILED',
+  TEST_LOADING: 'TEST_LOADING',
+};
+
+export {TEST_STATUS};
 
 export default TEST_DEFINITIONS;

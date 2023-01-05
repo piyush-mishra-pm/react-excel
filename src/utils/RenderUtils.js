@@ -4,6 +4,7 @@ import * as Diff from 'diff';
 
 import * as TestUtils from '../tests/TestUtils';
 import TEST_SETUP from '../tests/TEST_SETUP';
+import {TEST_STATUS} from '../tests/TEST_DEFINITIONS';
 
 export function renderImageOrTextValue(content) {
   if (TestUtils.isImageUrlOfAllowedImageFormats(content)) {
@@ -35,22 +36,38 @@ export function renderBodyCell(COL_NAME, row, rowIndex) {
     return (
       <td
         key={`${rowIndex}-${COL_NAME}`}
-        className={hasAnyTestFailed(row[COL_NAME].testResults) ? 'negative' : 'positive'}
+        className={
+          hasAnyTestFailed(row[COL_NAME].testResults)
+            ? 'negative'
+            : IsAnyTestLoading(row[COL_NAME].testResults)
+            ? 'warning'
+            : 'positive'
+        }
       >
         {renderImageOrTextValue(row[COL_NAME].value)}{' '}
-        {row[COL_NAME].testResults.map((testResult) => (
+        {row[COL_NAME].testResults.map((testResult, i) => (
           <div
-            style={{color: testResult.testPassed ? 'green' : 'red', fontSize: '1rem', fontFamily: 'monospace'}}
-            key={uniqueId(
-              `${rowIndex}-${COL_NAME}-${testResult.testId}-${testResult.testResultMessage}-${testResult.testPassed}-`
-            )}
+            style={{
+              color:
+                testResult.testStatus === TEST_STATUS.TEST_PASSED
+                  ? 'green'
+                  : testResult.testStatus === TEST_STATUS.TEST_FAILED
+                  ? 'red'
+                  : 'blue', // loading test
+              fontSize: '1rem',
+              fontFamily: 'monospace',
+            }}
+            key={uniqueId(i)}
           >
             {testResult.testId}
-            {!testResult.testPassed && ': '}
-            {!testResult.testPassed && (
+            {testResult.testStatus !== TEST_STATUS.TEST_PASSED && ': '}
+            {testResult.testStatus !== TEST_STATUS.TEST_PASSED && (
               <p style={{color: 'grey', fontSize: '0.75rem', fontFamily: 'monospace'}}>
                 {testResult.testResultMessage}
               </p>
+            )}
+            {testResult.testStatus === TEST_STATUS.TEST_LOADING && (
+              <div className="ui active centered inline loader"></div>
             )}
           </div>
         ))}
@@ -62,7 +79,11 @@ export function renderBodyCell(COL_NAME, row, rowIndex) {
 }
 
 function hasAnyTestFailed(testResultsArray) {
-  return testResultsArray.find((testResult) => !testResult.testPassed);
+  return testResultsArray.find((testResult) => testResult.testStatus === TEST_STATUS.TEST_FAILED);
+}
+
+function IsAnyTestLoading(testResultsArray) {
+  return testResultsArray.find((testResult) => testResult.testStatus === TEST_STATUS.TEST_LOADING);
 }
 
 export function renderHeaderRow(row, currentActiveSheetNumber) {
@@ -77,20 +98,20 @@ export function renderHeaderRow(row, currentActiveSheetNumber) {
           <th scope="col" key={COL_NAME}>
             {COL_NAME}
             {<hr />}
-            {getListOfAppliedTestForTheColumn(colIndex, sheetTestConfig).map((testConfig, index) => (
+            {getListOfAppliedTestForTheColumn(colIndex, sheetTestConfig).map((testConfig, testConfigIndex) => (
               <div
                 style={{color: '#899499', fontStyle: 'normal', fontSize: '.85rem', fontFamily: 'monospace'}}
-                key={`${testConfig.testId}-${index}`}
+                key={`${_.uniqueId(testConfigIndex)}`}
               >
                 <hr />
                 {testConfig.testId}
                 {' : '}
-                {Object.keys(testConfig.testMedata).map((key, index) => (
+                {Object.keys(testConfig.testMedata).map((testMedataKey, testMedataIndex) => (
                   <p
                     style={{color: '#B2BEB5', fontSize: '.75rem', fontStyle: 'italic', fontFamily: 'monospace'}}
-                    key={`${key}-${index}`}
+                    key={`${_.uniqueId(testMedataIndex)}`}
                   >
-                    {key}:{renderArrayOrPrimitive(testConfig.testMedata[key])}
+                    {testMedataKey}:{renderArrayOrPrimitive(testConfig.testMedata[testMedataKey])}
                   </p>
                 ))}
               </div>
@@ -140,10 +161,19 @@ export function renderSchemaLevelChecks(sheetLevelSchemaTestResults) {
     <div>
       Schema Level checks:
       {sheetLevelSchemaTestResults.map((testResult, index) => (
-        <div className={`ui ${testResult.testPassed ? 'positive' : 'negative'} message`} key={_.uniqueId(index)}>
+        <div
+          className={`ui ${
+            testResult.testStatus === TEST_STATUS.TEST_PASSED
+              ? 'positive'
+              : testResult.testStatus === TEST_STATUS.TEST_FAILED
+              ? 'negative'
+              : 'warning' //todo: loading icon when test status still loading.
+          } message`}
+          key={_.uniqueId(index)}
+        >
           <p>{testResult.testId}</p>
           {/** Only show metadata if failed schema tests */}
-          {!testResult.testPassed && (
+          {testResult.testStatus === TEST_STATUS.TEST_FAILED && (
             <div>
               <div className="header">Expected:</div>
               <div>{testResult.testResultMetadata.allowedColumnNames.join('\t|\t')}</div>
