@@ -2,7 +2,7 @@ import React from 'react';
 import {useDispatch} from 'react-redux';
 import ACTION_TYPES from '../store/ACTION_TYPES';
 
-import PerformTests from './PerformTests.js';
+import PerformTests from '../tests/PerformTests.js';
 
 function TestController(props) {
   const dispatch = useDispatch();

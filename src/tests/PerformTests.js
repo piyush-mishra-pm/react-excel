@@ -1,8 +1,8 @@
 import store from '../store/store';
 
 import _ from 'lodash';
-import TEST_SETUP from '../tests/TEST_SETUP';
-import {getColumnNames, findTestFunctionByTestId} from '../tests/TestUtils';
+import TEST_SETUP from './TEST_SETUP';
+import {getColumnNames, findTestFunctionByTestId} from './TestUtils';
 
 function PerformTests() {
   const state = store.getState();
@@ -37,7 +37,6 @@ function performCellLevelTests(state) {
       for (const COLUMN_CONFIG of COLUMN_CONFIG_OBJECTS) {
         for (const COLUMN_NUM of COLUMN_CONFIG.columnNums) {
           let fieldData = _.cloneDeep(row[ROW_KEYS[COLUMN_NUM]]);
-          //if (fieldData) fieldData = fieldData.trim();
           const fieldName = ROW_KEYS[COLUMN_NUM];
           for (const testConfig of COLUMN_CONFIG.testConfigs) {
             // id is unique to every test, so there can only be one test found.

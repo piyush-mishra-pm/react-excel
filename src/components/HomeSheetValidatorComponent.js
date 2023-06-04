@@ -20,20 +20,25 @@ const HomeSheetValidatorComponent = () => {
       </div>
 
       <div className="ui top attached tabular menu">
-        <div className={`${!testResultsTabEnabled && 'active'} item`} onClick={() => setTestResultsTabEnabled(false)}>
+        <div
+          className={`${!testResultsTabEnabled ? 'active' : ''} item`}
+          onClick={() => setTestResultsTabEnabled(false)}
+        >
           Imported
         </div>
-        <div className={`${testResultsTabEnabled && 'active'} item`} onClick={() => setTestResultsTabEnabled(true)}>
+        <div className={`${testResultsTabEnabled ? 'active' : ''} item`} onClick={() => setTestResultsTabEnabled(true)}>
           TestResults
         </div>
       </div>
-      <div className={`ui bottom attached ${!testResultsTabEnabled && 'active'} tab segment`}>
+      <div className={`ui bottom attached ${!testResultsTabEnabled ? 'active' : ''} tab segment`}>
         {/** Visualisation */}
-        <RenderSpreadSheets />
+        {console.log(`ui bottom attached ${!testResultsTabEnabled ? 'active' : ''} tab segment`)}
+        {!testResultsTabEnabled && <RenderSpreadSheets />}
       </div>
-      <div className={`ui bottom attached ${testResultsTabEnabled && 'active'} tab segment`}>
+      <div className={`ui bottom attached ${testResultsTabEnabled ? 'active' : ''} tab segment`}>
+        {console.log(`ui bottom attached ${testResultsTabEnabled ? 'active' : ''} tab segment`)}
         {/** Test component */}
-        <RenderTestResults />
+        {testResultsTabEnabled && <RenderTestResults />}
       </div>
     </div>
   );
