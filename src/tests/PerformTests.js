@@ -7,7 +7,9 @@ import {getColumnNames, findTestFunctionByTestId} from './TestUtils';
 function PerformTests() {
   const state = store.getState();
   performSchemaLevelTests(state);
-  performCellLevelTests(state);
+  //performCellLevelTests(state);
+  performSheetLevelTests(state);
+  performAcrossSheetTests(state);
 }
 
 function performSchemaLevelTests(state) {
@@ -24,6 +26,25 @@ function performSchemaLevelTests(state) {
     }
   }
 }
+
+function performSheetLevelTests(state) {
+  for (const SHEET_LEVEL_TEST_CONFIG of TEST_SETUP) {
+    const sheetNum = SHEET_LEVEL_TEST_CONFIG.sheetNum;
+    if (!SHEET_LEVEL_TEST_CONFIG.sheetLevelTestConfigs) {
+      console.info(`No Sheet level tests for sheet # ${sheetNum}!`);
+      return;
+    }
+    console.info(`Performing sheet level tests for sheet # ${sheetNum}!`);
+    for (const SHEET_TEST_ITEM of SHEET_LEVEL_TEST_CONFIG.sheetLevelTestConfigs) {
+      const SHEET_TEST_ITEM_CONFIG = SHEET_TEST_ITEM.testConfig;
+      if (!SHEET_TEST_ITEM_CONFIG) return;
+      const foundTestDefinition = findTestFunctionByTestId(SHEET_TEST_ITEM_CONFIG.testId);
+      foundTestDefinition.testFunction(sheetNum, SHEET_TEST_ITEM_CONFIG.testMedata);
+    }
+  }
+}
+
+function performAcrossSheetTests(state) {}
 
 function performCellLevelTests(state) {
   const SHEETS_FOR_TESTS = TEST_SETUP.map((sheetTestConfig) => sheetTestConfig.sheetNum);

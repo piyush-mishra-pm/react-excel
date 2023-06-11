@@ -212,3 +212,50 @@ export function renderSchemaLevelChecks(sheetLevelSchemaTestResults) {
     </div>
   );
 }
+
+export function renderSingleSheetLevelChecks(singleSheetLevelTestResults) {
+  return (
+    <div>
+      Single Sheet Level Checks
+      {singleSheetLevelTestResults.map((testResult, index) => (
+        <div
+          className={`ui ${
+            testResult.testStatus === TEST_STATUS.TEST_PASSED
+              ? 'positive'
+              : testResult.testStatus === TEST_STATUS.TEST_FAILED
+              ? 'negative'
+              : 'warning' //todo: loading icon when test status still loading.
+          } message`}
+          key={_.uniqueId(index)}
+        >
+          <p>{testResult.testId}</p>
+          {/** Only show metadata if failed schema tests */}
+          {testResult.testStatus === TEST_STATUS.TEST_FAILED && (
+            <div>
+              <div className="header">Message:</div>
+              <div>{testResult.testResultMessage}</div>
+              <br />
+              <div className="header">Duplicate Row Indices for the column text (Concatenated)</div>
+              <table className="ui celled table">
+                <thead>
+                  <tr>
+                    <th>Concatenated Column text</th>
+                    <th>Row Indices</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {testResult.testResultMetadata.MATCHED_ROWS.map((match) => (
+                    <tr key={_.uniqueId()}>
+                      <td>{match[0]}</td>
+                      <td>{match[1].join(', ')}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+}

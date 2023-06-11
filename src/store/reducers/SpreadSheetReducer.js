@@ -34,6 +34,22 @@ function SpreadSheetReducer(state = INITIAL_STATE, action) {
       );
       break;
 
+    case ACTION_TYPES.TEST_SHEET_LEVEL_ITEM_INIT:
+      state.testResultsSheetLevelTest = getInitSheetLevelTestData(state.importedData);
+      break;
+
+    case ACTION_TYPES.TEST_SHEET_LEVEL_ITEM:
+      state.testResultsSheetLevelTest = modifySheetLevelTestResults(state.testResultsSheetLevelTest, action.payload);
+      break;
+
+    case ACTION_TYPES.TEST_ACROSS_SHEET_ITEM_INIT:
+      state.testResultsAcrossSheetTest = getInitAcrossSheetTestData(state.importedData);
+      break;
+
+    case ACTION_TYPES.TEST_ACROSS_SHEET_ITEM:
+      state.testResultsAcrossSheetTest = modifyAcrossSheetTestResults(state.testResultsAcrossSheetTest, action.payload);
+      break;
+
     default:
       break;
   }
@@ -71,5 +87,30 @@ function modifySchemaTestResultsBySheet(testResultsDataSchemaLevel, payload) {
   testResultsDataSchemaLevel[payload.sheet].schemaTestResults = payload.testResults;
   return testResultsDataSchemaLevel;
 }
+
+function getInitSheetLevelTestData(importedData) {
+  const clonedImportedData = _.cloneDeep(importedData);
+  const initSheetLevelTestData = [];
+  for (const key in clonedImportedData) {
+    initSheetLevelTestData[key] = {sheetLevelTestResults: {}};
+  }
+  return initSheetLevelTestData;
+}
+
+function modifySheetLevelTestResults(testResultsDataSheetLevel, payload) {
+  testResultsDataSheetLevel[payload.sheet].sheetLevelTestResults = payload.testResults;
+  return testResultsDataSheetLevel;
+}
+
+function getInitAcrossSheetTestData(importedData) {
+  const clonedImportedData = _.cloneDeep(importedData);
+  const initAcrossSheetTestData = [];
+  for (const key in clonedImportedData) {
+    initAcrossSheetTestData[key] = {acrossSheetTestResults: {}};
+  }
+  return initAcrossSheetTestData;
+}
+
+function modifyAcrossSheetTestResults() {}
 
 export default SpreadSheetReducer;

@@ -2,6 +2,14 @@ import _ from 'lodash';
 
 import * as TestUtils from './TestUtils';
 
+const TEST_STATUS = {
+  TEST_PASSED: 'TEST_PASSED',
+  TEST_FAILED: 'TEST_FAILED',
+  TEST_LOADING: 'TEST_LOADING',
+};
+
+const UNTIL_LAST_ROW = -1;
+
 const TEST_DEFINITIONS = {
   TESTS: {
     // Text Tests:
@@ -382,15 +390,69 @@ const TEST_DEFINITIONS = {
         }
       },
     },
+
+    // Sheet level tests: (On 1 sheet)
+    UNIQUE_ROW_AFTER_COLUMN_CONCAT: {
+      id: 'UNIQUE_ROW_AFTER_COLUMN_CONCAT',
+      description: 'After column concatenation, each row must be unique in this sheet.',
+      metadata: {
+        COLUMN_NUMS: [0, 1, 2],
+        ROW_START: 1,
+        ROW_END: UNTIL_LAST_ROW,
+      },
+      testFunction(sheetNumber, testMetadata) {
+        if (isNaN(sheetNumber) || Object.keys(testMetadata).length === 0) {
+          TestUtils.dispatchSheetLevelTestAction(this.id, 'empty column names', TEST_STATUS.TEST_FAILED, sheetNumber, {
+            COLUMN_NUMS: (testMetadata && testMetadata.COLUMN_NUMS) || [],
+            ROW_START: (testMetadata && testMetadata.ROW_START) || UNTIL_LAST_ROW,
+            ROW_END: (testMetadata && testMetadata.ROW_END) || UNTIL_LAST_ROW,
+            MATCHED_ROWS: [],
+          });
+          return;
+        }
+
+        const columnNums = testMetadata.COLUMN_NUMS ? testMetadata.COLUMN_NUMS : this.metadata.COLUMN_NUMS;
+        const rowStart = !isNaN(testMetadata.ROW_START) ? testMetadata.ROW_START : this.metadata.ROW_START;
+        const rowEnd = !isNaN(testMetadata.ROW_END) ? testMetadata.ROW_END : this.metadata.ROW_END;
+        const nonUniqueInstances = TestUtils.getUniqueRowsAfterColumnConcat(sheetNumber, columnNums, rowStart, rowEnd);
+        if (!nonUniqueInstances || nonUniqueInstances.length === 0) {
+          TestUtils.dispatchSheetLevelTestAction(
+            this.id,
+            `Unique rows ${rowStart}-${rowEnd === -1 ? '' : rowEnd} and columns ${columnNums.join(
+              ','
+            )} in sheet # ${sheetNumber}`,
+            TEST_STATUS.TEST_PASSED,
+            sheetNumber,
+            {
+              COLUMN_NUMS: columnNums,
+              ROW_START: rowStart,
+              ROW_END: rowEnd,
+              MATCHED_ROWS: [],
+            }
+          );
+        } else {
+          TestUtils.dispatchSheetLevelTestAction(
+            this.id,
+            `Repeated rows for ${rowStart}-${rowEnd === -1 ? '' : rowEnd} and columns ${columnNums.join(
+              ','
+            )} in sheet # ${sheetNumber}`,
+            TEST_STATUS.TEST_FAILED,
+            sheetNumber,
+            {
+              COLUMN_NUMS: columnNums,
+              ROW_START: rowStart,
+              ROW_END: rowEnd,
+              MATCHED_ROWS: nonUniqueInstances,
+            }
+          );
+        }
+      },
+    },
+
+    // Across Sheets tests: (On multiple sheets)
   },
 };
 
-const TEST_STATUS = {
-  TEST_PASSED: 'TEST_PASSED',
-  TEST_FAILED: 'TEST_FAILED',
-  TEST_LOADING: 'TEST_LOADING',
-};
-
-export {TEST_STATUS};
+export {TEST_STATUS, UNTIL_LAST_ROW};
 
 export default TEST_DEFINITIONS;

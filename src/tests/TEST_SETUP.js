@@ -1,4 +1,4 @@
-import TEST_DEFINITIONS from './TEST_DEFINITIONS';
+import TEST_DEFINITIONS, {UNTIL_LAST_ROW} from './TEST_DEFINITIONS';
 
 const TEST_SETUP = [
   {
@@ -89,6 +89,35 @@ const TEST_SETUP = [
             },
           },
         ],
+      },
+    ],
+    sheetLevelTestConfigs: [
+      {
+        testConfig: {
+          testId: TEST_DEFINITIONS.TESTS.UNIQUE_ROW_AFTER_COLUMN_CONCAT.id,
+          testMedata: {
+            COLUMN_NUMS: [0, 1, 2],
+            ROW_START: 0,
+            ROW_END: -1,
+            // Sheet is inherited from `sheetNum` property of this test object.
+          },
+        },
+      },
+    ],
+    acrossSheetTestConfigs: [
+      {
+        testConfig: {
+          testId: TEST_DEFINITIONS.TESTS.UNIQUE_ROW_AFTER_COLUMN_CONCAT,
+          testMedata: {
+            COLUMN_NUMS_IN_THIS_SHEET: [0, 1, 2],
+            ROW_START_IN_THIS_SHEET: 1,
+            ROW_END_IN_THIS_SHEET: UNTIL_LAST_ROW,
+            OTHER_SHEET_NUM: 1,
+            COLUMN_NUMS_IN_OTHER_SHEET: [0, 1, 2],
+            ROW_START_IN_OTHER_SHEET: 1,
+            ROW_END_IN_OTHER_SHEET: UNTIL_LAST_ROW,
+          },
+        },
       },
     ],
   },

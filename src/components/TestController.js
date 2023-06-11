@@ -10,6 +10,10 @@ function TestController(props) {
   function startTestSuite() {
     // Clone Schema level data as initial Schema level test results.
     dispatch({type: ACTION_TYPES.TEST_SCHEMA_INIT});
+    // Clone and Init Sheet Level Test results:
+    dispatch({type: ACTION_TYPES.TEST_SHEET_LEVEL_ITEM_INIT});
+    // Clone and Init Across Sheet Level Test results:
+    dispatch({type: ACTION_TYPES.TEST_ACROSS_SHEET_ITEM_INIT});
     // Clone imported sheet data as initial test results.
     dispatch({type: ACTION_TYPES.TEST_INIT});
     // Perform text tests.

@@ -13,9 +13,10 @@ Analysing Excel sheet using React Frontend.
 - Timeout of unloadable images and hence their tests.
 - Parallel Presence: Set of column values, should be present (only once) in multiple sheets.
   - Misses: Present in one but missing in other.
-- Why automatic opening of Test results is not working.
-- Dedup in 1 sheet: Combination of columns in same sheet should not repeat.
 - Presence in 2 sheet: Certain Combination of columns in 1 sheet should be present as a Combination of columns in 2nd sheet.
 - Schema: 
   - Beyond a fixed number of columns, we can relax the checks. If extra column put towards end of FOR_CUSTOMER_REVIEW sheet, it should be OK.
-- 
+- Spinner when Test initiated and test results tabe not enabled yet.
+- Ready the configs for generic pilots.
+- Check pending Todos.
+- Add conditions from Reco Front sheet.

@@ -32,11 +32,9 @@ const HomeSheetValidatorComponent = () => {
       </div>
       <div className={`ui bottom attached ${!testResultsTabEnabled ? 'active' : ''} tab segment`}>
         {/** Visualisation */}
-        {console.log(`ui bottom attached ${!testResultsTabEnabled ? 'active' : ''} tab segment`)}
         {!testResultsTabEnabled && <RenderSpreadSheets />}
       </div>
       <div className={`ui bottom attached ${testResultsTabEnabled ? 'active' : ''} tab segment`}>
-        {console.log(`ui bottom attached ${testResultsTabEnabled ? 'active' : ''} tab segment`)}
         {/** Test component */}
         {testResultsTabEnabled && <RenderTestResults />}
       </div>
