@@ -111,6 +111,9 @@ function getInitAcrossSheetTestData(importedData) {
   return initAcrossSheetTestData;
 }
 
-function modifyAcrossSheetTestResults() {}
+function modifyAcrossSheetTestResults(testResultsDataSheetLevel, payload) {
+  testResultsDataSheetLevel[payload.sheet].acrossSheetTestResults = payload.testResults;
+  return testResultsDataSheetLevel;
+}
 
 export default SpreadSheetReducer;

@@ -235,7 +235,7 @@ export function renderSingleSheetLevelChecks(singleSheetLevelTestResults) {
               <div className="header">Message:</div>
               <div>{testResult.testResultMessage}</div>
               <br />
-              <div className="header">Duplicate Row Indices for the column text (Concatenated)</div>
+              <div className="header">Duplicate Row Indices for the column text</div>
               <table className="ui celled table">
                 <thead>
                   <tr>
@@ -248,6 +248,84 @@ export function renderSingleSheetLevelChecks(singleSheetLevelTestResults) {
                     <tr key={_.uniqueId()}>
                       <td>{match[0]}</td>
                       <td>{match[1].join(', ')}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+export function renderAcrossSheetLevelChecks(acrossSheetLevelTestResults, thisSheetNum) {
+  return (
+    <div>
+      Across Sheet Level Checks
+      {acrossSheetLevelTestResults.map((testResult, index) => (
+        <div
+          className={`ui ${
+            testResult.testStatus === TEST_STATUS.TEST_PASSED
+              ? 'positive'
+              : testResult.testStatus === TEST_STATUS.TEST_FAILED
+              ? 'negative'
+              : 'warning' //todo: loading icon when test status still loading.
+          } message`}
+          key={_.uniqueId(index)}
+        >
+          <p>{testResult.testId}</p>
+          {/** Only show metadata if failed schema tests */}
+          {testResult.testStatus === TEST_STATUS.TEST_FAILED && (
+            <div>
+              <div className="header">Message:</div>
+              <div>{testResult.testResultMessage}</div>
+              <br />
+              <div className="header">
+                Non-Unique rows (Missing or multiple occurrences) for specified columns across 2 sheets.
+                <br />
+              </div>
+              <div>
+                Compared from [Sheet:{thisSheetNum}][Col:
+                {testResult.testResultMetadata.COLUMN_NUMS_IN_THIS_SHEET.join(',')}
+                ][Row:
+                {testResult.testResultMetadata.ROW_START_IN_THIS_SHEET +
+                  ':' +
+                  testResult.testResultMetadata.ROW_END_IN_THIS_SHEET}
+                ] to [Sheet:
+                {testResult.testResultMetadata.OTHER_SHEET_NUM}][Col:
+                {testResult.testResultMetadata.COLUMN_NUMS_IN_OTHER_SHEET.join(',')}
+                ][Row:
+                {testResult.testResultMetadata.ROW_START_IN_OTHER_SHEET +
+                  ':' +
+                  testResult.testResultMetadata.ROW_END_IN_OTHER_SHEET}
+                ].
+              </div>
+              <table className="ui celled table">
+                <thead>
+                  <tr>
+                    <th>Concatenated text</th>
+                    <th>From</th>
+                    <th>To</th>
+                    <th>Type</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {testResult.testResultMetadata.MATCHED_ROWS.map((match) => (
+                    <tr key={_.uniqueId()}>
+                      <td>{match.concatString}</td>
+                      <td>
+                        Sheet:{match.from.sheetNum !== thisSheetNum ? `${match.from.sheetNum} [REVERSE]` : thisSheetNum}
+                        <br />
+                        Rows:{match.from.rowIdx.join(',')}
+                      </td>
+                      <td>
+                        Sheet:{match.to.sheetNum}
+                        <br />
+                        Rows:{match.to.rowIdx.join(',')}
+                      </td>
+                      <td>{match.type}</td>
                     </tr>
                   ))}
                 </tbody>

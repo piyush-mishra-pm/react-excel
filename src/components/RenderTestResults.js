@@ -1,6 +1,10 @@
 import React, {useState} from 'react';
 import {useSelector} from 'react-redux';
-import {renderSchemaLevelChecks, renderSingleSheetLevelChecks} from '../utils/RenderUtils';
+import {
+  renderAcrossSheetLevelChecks,
+  renderSchemaLevelChecks,
+  renderSingleSheetLevelChecks,
+} from '../utils/RenderUtils';
 
 import RenderSpreadSheet from './RenderSpreadSheet';
 
@@ -52,10 +56,22 @@ function RenderTestResults() {
       )}
 
       {/** Render (Across) Sheet checks: */}
+      {testResultsAcrossSheetTest.length ? (
+        <div className="ui bottom attached active tab segment" key={3}>
+          {testResultsAcrossSheetTest[activeTestResultTabNumber].acrossSheetTestResults.length
+            ? renderAcrossSheetLevelChecks(
+                testResultsAcrossSheetTest[activeTestResultTabNumber].acrossSheetTestResults,
+                activeTestResultTabNumber
+              )
+            : ' '}
+        </div>
+      ) : (
+        'No Test results yet!'
+      )}
 
       {/** Render Spreadsheet level checks: */}
       {sheetsData.length ? (
-        <div className="ui bottom attached active tab segment" key={3}>
+        <div className="ui bottom attached active tab segment" key={4}>
           Cell Level checks:
           <RenderSpreadSheet
             sheetData={sheetsData[activeTestResultTabNumber]}

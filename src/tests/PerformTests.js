@@ -8,8 +8,8 @@ function PerformTests() {
   const state = store.getState();
   performSchemaLevelTests(state);
   //performCellLevelTests(state);
-  performSheetLevelTests(state);
-  performAcrossSheetTests(state);
+  performSheetLevelTests();
+  performAcrossSheetTests();
 }
 
 function performSchemaLevelTests(state) {
@@ -27,7 +27,7 @@ function performSchemaLevelTests(state) {
   }
 }
 
-function performSheetLevelTests(state) {
+function performSheetLevelTests() {
   for (const SHEET_LEVEL_TEST_CONFIG of TEST_SETUP) {
     const sheetNum = SHEET_LEVEL_TEST_CONFIG.sheetNum;
     if (!SHEET_LEVEL_TEST_CONFIG.sheetLevelTestConfigs) {
@@ -44,7 +44,22 @@ function performSheetLevelTests(state) {
   }
 }
 
-function performAcrossSheetTests(state) {}
+function performAcrossSheetTests() {
+  for (const SHEET_LEVEL_TEST_CONFIG of TEST_SETUP) {
+    const sheetNum = SHEET_LEVEL_TEST_CONFIG.sheetNum;
+    if (!SHEET_LEVEL_TEST_CONFIG.acrossSheetTestConfigs) {
+      console.info(`No Across Sheet level tests for sheet # ${sheetNum}!`);
+      return;
+    }
+    console.info(`Performing Across sheet level tests for sheet # ${sheetNum}!`);
+    for (const SHEET_TEST_ITEM of SHEET_LEVEL_TEST_CONFIG.acrossSheetTestConfigs) {
+      const SHEET_TEST_ITEM_CONFIG = SHEET_TEST_ITEM.testConfig;
+      if (!SHEET_TEST_ITEM_CONFIG) return;
+      const foundTestDefinition = findTestFunctionByTestId(SHEET_TEST_ITEM_CONFIG.testId);
+      foundTestDefinition.testFunction(sheetNum, SHEET_TEST_ITEM_CONFIG.testMedata);
+    }
+  }
+}
 
 function performCellLevelTests(state) {
   const SHEETS_FOR_TESTS = TEST_SETUP.map((sheetTestConfig) => sheetTestConfig.sheetNum);

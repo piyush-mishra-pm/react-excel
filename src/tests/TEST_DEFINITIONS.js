@@ -8,7 +8,13 @@ const TEST_STATUS = {
   TEST_LOADING: 'TEST_LOADING',
 };
 
-const UNTIL_LAST_ROW = -1;
+const UNIQUE_OCCURRENCE_STATUS = {
+  UNIQUE_OCCURRENCE: 'UNIQUE_OCCURRENCE',
+  ABSENT: 'ABSENT',
+  MULTIPLE_OCCURRENCE: 'MULTIPLE_OCCURRENCE',
+};
+
+const MINUS_ONE = -1;
 
 const TEST_DEFINITIONS = {
   TESTS: {
@@ -398,14 +404,14 @@ const TEST_DEFINITIONS = {
       metadata: {
         COLUMN_NUMS: [0, 1, 2],
         ROW_START: 1,
-        ROW_END: UNTIL_LAST_ROW,
+        ROW_END: MINUS_ONE,
       },
       testFunction(sheetNumber, testMetadata) {
         if (isNaN(sheetNumber) || Object.keys(testMetadata).length === 0) {
           TestUtils.dispatchSheetLevelTestAction(this.id, 'empty column names', TEST_STATUS.TEST_FAILED, sheetNumber, {
             COLUMN_NUMS: (testMetadata && testMetadata.COLUMN_NUMS) || [],
-            ROW_START: (testMetadata && testMetadata.ROW_START) || UNTIL_LAST_ROW,
-            ROW_END: (testMetadata && testMetadata.ROW_END) || UNTIL_LAST_ROW,
+            ROW_START: (testMetadata && testMetadata.ROW_START) || MINUS_ONE,
+            ROW_END: (testMetadata && testMetadata.ROW_END) || MINUS_ONE,
             MATCHED_ROWS: [],
           });
           return;
@@ -450,9 +456,134 @@ const TEST_DEFINITIONS = {
     },
 
     // Across Sheets tests: (On multiple sheets)
+    UNIQUE_ROW_AFTER_COLUMN_CONCAT_ACROSS_SHEET: {
+      id: 'UNIQUE_ROW_AFTER_COLUMN_CONCAT_ACROSS_SHEET',
+      description:
+        'Both the sheets must contain concatenated column string only once, within a collection of rows across those sheets. ',
+      metadata: {
+        COLUMN_NUMS_IN_THIS_SHEET: [0, 1, 2],
+        ROW_START_IN_THIS_SHEET: 1,
+        ROW_END_IN_THIS_SHEET: MINUS_ONE,
+        OTHER_SHEET_NUM: 1,
+        COLUMN_NUMS_IN_OTHER_SHEET: [0, 1, 2],
+        ROW_START_IN_OTHER_SHEET: 1,
+        ROW_END_IN_OTHER_SHEET: MINUS_ONE,
+      },
+      testFunction(sheetNumber, testMetadata) {
+        if (
+          isNaN(sheetNumber) ||
+          isNaN(testMetadata.OTHER_SHEET_NUM) ||
+          Object.keys(testMetadata).length === 0 ||
+          (testMetadata.ROW_END_IN_THIS_SHEET !== MINUS_ONE &&
+            testMetadata.ROW_START_IN_THIS_SHEET > testMetadata.ROW_END_IN_THIS_SHEET) ||
+          (testMetadata.ROW_END_IN_THIS_SHEET !== MINUS_ONE &&
+            testMetadata.ROW_START_IN_OTHER_SHEET > testMetadata.ROW_END_IN_OTHER_SHEET)
+        ) {
+          TestUtils.dispatchAcrossSheetTestAction(
+            this.id,
+            'Incorrect Test Attributes.',
+            TEST_STATUS.TEST_FAILED,
+            sheetNumber,
+            {
+              COLUMN_NUMS_IN_THIS_SHEET: (testMetadata && testMetadata.COLUMN_NUMS_IN_THIS_SHEET) || [],
+              ROW_START_IN_THIS_SHEET: (testMetadata && testMetadata.ROW_START_IN_THIS_SHEET) || MINUS_ONE,
+              ROW_END_IN_THIS_SHEET: (testMetadata && testMetadata.ROW_END_IN_THIS_SHEET) || MINUS_ONE,
+              OTHER_SHEET_NUM: (testMetadata && testMetadata.OTHER_SHEET_NUM) || MINUS_ONE,
+              COLUMN_NUMS_IN_OTHER_SHEET: (testMetadata && testMetadata.COLUMN_NUMS_IN_OTHER_SHEET) || [],
+              ROW_START_IN_OTHER_SHEET: (testMetadata && testMetadata.ROW_START_IN_OTHER_SHEET) || MINUS_ONE,
+              ROW_END_IN_OTHER_SHEET: (testMetadata && testMetadata.ROW_END_IN_OTHER_SHEET) || MINUS_ONE,
+              MATCHED_ROWS: [],
+            }
+          );
+          return;
+        }
+
+        const columnNumsThisSheet = testMetadata.COLUMN_NUMS_IN_THIS_SHEET
+          ? testMetadata.COLUMN_NUMS_IN_THIS_SHEET
+          : this.metadata.COLUMN_NUMS_IN_THIS_SHEET;
+        const rowStartThisSheet = !isNaN(testMetadata.ROW_START_IN_THIS_SHEET)
+          ? testMetadata.ROW_START_IN_THIS_SHEET
+          : this.metadata.ROW_START_IN_THIS_SHEET;
+        const rowEndThisSheet = !isNaN(testMetadata.ROW_END_IN_THIS_SHEET)
+          ? testMetadata.ROW_END_IN_THIS_SHEET
+          : this.metadata.ROW_END_IN_THIS_SHEET;
+        const otherSheetNum = !isNaN(testMetadata.OTHER_SHEET_NUM)
+          ? testMetadata.OTHER_SHEET_NUM
+          : this.metadata.OTHER_SHEET_NUM;
+        const columnNumsOtherSheet = testMetadata.COLUMN_NUMS_IN_OTHER_SHEET
+          ? testMetadata.COLUMN_NUMS_IN_OTHER_SHEET
+          : this.metadata.COLUMN_NUMS_IN_OTHER_SHEET;
+        const rowStartOtherSheet = !isNaN(testMetadata.ROW_START_IN_OTHER_SHEET)
+          ? testMetadata.ROW_START_IN_OTHER_SHEET
+          : this.metadata.ROW_START_IN_OTHER_SHEET;
+        const rowEndOtherSheet = !isNaN(testMetadata.ROW_END_IN_OTHER_SHEET)
+          ? testMetadata.ROW_END_IN_OTHER_SHEET
+          : this.metadata.ROW_END_IN_OTHER_SHEET;
+
+        // Occurred None or Multiple times (but not uniquely once), across 2 sheets.
+        const nonUniqueInstances = TestUtils.getUniqueRowsAfterColumnConcatAcross2Sheets(
+          sheetNumber,
+          columnNumsThisSheet,
+          rowStartThisSheet,
+          rowEndThisSheet,
+          otherSheetNum,
+          columnNumsOtherSheet,
+          rowStartOtherSheet,
+          rowEndOtherSheet
+        );
+
+        if (!nonUniqueInstances || nonUniqueInstances.length === 0) {
+          TestUtils.dispatchAcrossSheetTestAction(
+            this.id,
+            `Unique rows in ${rowStartThisSheet}-${
+              rowEndThisSheet === MINUS_ONE ? 'end' : rowEndThisSheet
+            } and columns ${columnNumsThisSheet.join(
+              ','
+            )} of sheet #${sheetNumber}, with rows in ${rowStartOtherSheet}-${
+              rowEndOtherSheet === MINUS_ONE ? 'end' : rowEndOtherSheet
+            } and columns ${columnNumsOtherSheet.join(',')} of sheet #${otherSheetNum}.`,
+            TEST_STATUS.TEST_PASSED,
+            sheetNumber,
+            {
+              COLUMN_NUMS_IN_THIS_SHEET: columnNumsThisSheet,
+              ROW_START_IN_THIS_SHEET: rowStartThisSheet,
+              ROW_END_IN_THIS_SHEET: rowEndThisSheet,
+              OTHER_SHEET_NUM: otherSheetNum,
+              COLUMN_NUMS_IN_OTHER_SHEET: columnNumsOtherSheet,
+              ROW_START_IN_OTHER_SHEET: rowStartOtherSheet,
+              ROW_END_IN_OTHER_SHEET: rowEndOtherSheet,
+              MATCHED_ROWS: [],
+            }
+          );
+        } else {
+          TestUtils.dispatchAcrossSheetTestAction(
+            this.id,
+            `Repeated rows in ${rowStartThisSheet}-${
+              rowEndThisSheet === MINUS_ONE ? 'end' : rowEndThisSheet
+            } and columns ${columnNumsThisSheet.join(
+              ','
+            )} of sheet #${sheetNumber}, with rows in ${rowStartOtherSheet}-${
+              rowEndOtherSheet === MINUS_ONE ? 'end' : rowEndOtherSheet
+            } and columns ${columnNumsOtherSheet.join(',')} of sheet #${otherSheetNum}.`,
+            TEST_STATUS.TEST_FAILED,
+            sheetNumber,
+            {
+              COLUMN_NUMS_IN_THIS_SHEET: columnNumsThisSheet,
+              ROW_START_IN_THIS_SHEET: rowStartThisSheet,
+              ROW_END_IN_THIS_SHEET: rowEndThisSheet,
+              OTHER_SHEET_NUM: otherSheetNum,
+              COLUMN_NUMS_IN_OTHER_SHEET: columnNumsOtherSheet,
+              ROW_START_IN_OTHER_SHEET: rowStartOtherSheet,
+              ROW_END_IN_OTHER_SHEET: rowEndOtherSheet,
+              MATCHED_ROWS: nonUniqueInstances,
+            }
+          );
+        }
+      },
+    },
   },
 };
 
-export {TEST_STATUS, UNTIL_LAST_ROW};
+export {TEST_STATUS, MINUS_ONE as UNTIL_LAST_ROW, UNIQUE_OCCURRENCE_STATUS};
 
 export default TEST_DEFINITIONS;

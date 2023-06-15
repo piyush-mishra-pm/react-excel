@@ -2,7 +2,7 @@ import _ from 'lodash';
 
 import store from '../store/store';
 import ACTION_TYPES from '../store/ACTION_TYPES';
-import TEST_DEFINITIONS, {TEST_STATUS, UNTIL_LAST_ROW} from './TEST_DEFINITIONS';
+import TEST_DEFINITIONS, {TEST_STATUS, UNTIL_LAST_ROW, UNIQUE_OCCURRENCE_STATUS} from './TEST_DEFINITIONS';
 
 export function dispatchTestItemAction(testId, testResultMessage, testStatus, sheetNumber, rowNum, fieldName) {
   // Get latest state picture, since last test check.
@@ -83,6 +83,37 @@ export function dispatchSheetLevelTestAction(
     type: ACTION_TYPES.TEST_SHEET_LEVEL_ITEM,
     payload: {
       testResults: _.cloneDeep(sheetWithSheetLevelTestErrors['testResults']),
+      sheet: _.cloneDeep(sheetNumber),
+    },
+  });
+}
+
+export function dispatchAcrossSheetTestAction(
+  testId,
+  testResultMessage,
+  testStatus,
+  sheetNumber,
+  testResultMetadata = {}
+) {
+  const state = store.getState();
+  let sheetWithAcrossSheetLevelTestErrors = _.cloneDeep(state.root.testResultsAcrossSheetTest[sheetNumber]);
+
+  sheetWithAcrossSheetLevelTestErrors['testResults'] = _.cloneDeep(
+    _.uniqBy(
+      _.compact(
+        _.concat(
+          _.cloneDeep({testId, testResultMessage, testStatus, testResultMetadata}),
+          sheetWithAcrossSheetLevelTestErrors['testResults']
+        )
+      ),
+      'testId'
+    )
+  );
+
+  store.dispatch({
+    type: ACTION_TYPES.TEST_ACROSS_SHEET_ITEM,
+    payload: {
+      testResults: _.cloneDeep(sheetWithAcrossSheetLevelTestErrors['testResults']),
       sheet: _.cloneDeep(sheetNumber),
     },
   });
@@ -188,6 +219,116 @@ export function getUniqueRowsAfterColumnConcat(sheetNumber, columnNums, rowStart
   }
   const duplicatedRows = Array.from(seenRows).filter(([_concatRowText, _rowIndexes]) => _rowIndexes.length > 1);
   return duplicatedRows;
+}
+
+export function getUniqueRowsAfterColumnConcatAcross2Sheets(
+  sheetNumber,
+  columnNumsThisSheet,
+  rowStartThisSheet,
+  rowEndThisSheet,
+  otherSheetNum,
+  columnNumsOtherSheet,
+  rowStartOtherSheet,
+  rowEndOtherSheet
+) {
+  const state = store.getState();
+  const importedThisSheetData = state.root.importedData[sheetNumber];
+  const importedOtherSheetData = state.root.importedData[otherSheetNum];
+
+  if (rowEndThisSheet === UNTIL_LAST_ROW) {
+    rowEndThisSheet = importedThisSheetData.length - 1;
+  }
+  if (rowEndOtherSheet === UNTIL_LAST_ROW) {
+    rowEndOtherSheet = importedOtherSheetData.length - 1;
+  }
+
+  const columnNamesThisSheet = Object.keys(importedThisSheetData[rowStartThisSheet]);
+  const columnNamesOtherSheet = Object.keys(importedOtherSheetData[rowStartOtherSheet]);
+
+  /*
+  Construct Sheet 1 Map (concatRow -> [rowIdx])
+  Construct Sheet 2 Map (concatRow -> [rowIdx])
+  Compare:
+    (This) Sheet 1 (row) -> Present in Sheet2 ?
+                  -> Present Only once ?
+                      -> Pass
+                      -> Fail -> concatString, [sheetNum,rowIdxThis], [sheetNum,rowIdxOther]
+    (Other) Sheet 2 (row) -> Present in Sheet1 ?
+                -> Present Only once ?
+                    -> Pass
+                    -> Fail -> concatString, [sheetNum,rowIdxOther], [sheetNum,rowIdxThis]
+  */
+
+  const seenRowsInThisSheet = constructRowsSeenMap(
+    rowStartThisSheet,
+    rowEndThisSheet,
+    columnNumsThisSheet,
+    importedThisSheetData,
+    columnNamesThisSheet
+  );
+
+  const seenRowsInOtherSheet = constructRowsSeenMap(
+    rowStartOtherSheet,
+    rowEndOtherSheet,
+    columnNumsOtherSheet,
+    importedOtherSheetData,
+    columnNamesOtherSheet
+  );
+
+  const nonUniqueOcurrencesIn2Sheets = [
+    ...findNonUniqueMatches(seenRowsInThisSheet, seenRowsInOtherSheet, sheetNumber, otherSheetNum),
+    ...findNonUniqueMatches(seenRowsInOtherSheet, seenRowsInThisSheet, otherSheetNum, sheetNumber),
+  ];
+
+  return nonUniqueOcurrencesIn2Sheets;
+}
+
+function constructRowsSeenMap(
+  rowStartInSheet,
+  rowEndInSheet,
+  columnNumsInSheet,
+  importedInSheetData,
+  columnNamesInSheet
+) {
+  const seenRowsInTheSheet = new Map();
+  for (let rowIdx = rowStartInSheet; rowIdx <= rowEndInSheet; rowIdx++) {
+    let concatenatedRow = '';
+    for (let colIdx of columnNumsInSheet) {
+      concatenatedRow += importedInSheetData[rowIdx][columnNamesInSheet[colIdx]];
+    }
+
+    if (seenRowsInTheSheet.has(concatenatedRow)) {
+      seenRowsInTheSheet.set(concatenatedRow, [...seenRowsInTheSheet.get(concatenatedRow), rowIdx]);
+    } else {
+      seenRowsInTheSheet.set(concatenatedRow, [rowIdx]);
+    }
+  }
+  return seenRowsInTheSheet;
+}
+
+function findNonUniqueMatches(fromMap, toMap, fromSheetNum, toSheetNum) {
+  const nonUniqueOccurences = [];
+  for (const [_concatRowText, _rowIndexes] of fromMap) {
+    // ABSENCE:
+    if (!toMap.has(_concatRowText) || (toMap.has(_concatRowText) && toMap.get(_concatRowText).length < 1)) {
+      nonUniqueOccurences.push({
+        concatString: _concatRowText,
+        from: {sheetNum: fromSheetNum, rowIdx: [..._rowIndexes]},
+        to: {sheetNum: toSheetNum, rowIdx: []},
+        type: UNIQUE_OCCURRENCE_STATUS.ABSENT,
+      });
+    }
+    // MULTIPLE OCCURRENCES:
+    else if (toMap.get(_concatRowText).length > 1) {
+      nonUniqueOccurences.push({
+        concatString: _concatRowText,
+        from: {sheetNum: fromSheetNum, rowIdx: [..._rowIndexes]},
+        to: {sheetNum: toSheetNum, rowIdx: [...toMap.get(_concatRowText)]},
+        type: UNIQUE_OCCURRENCE_STATUS.MULTIPLE_OCCURRENCE,
+      });
+    }
+  }
+  return nonUniqueOccurences;
 }
 
 export function getColumnNames(state, sheetNum, rowNum) {
