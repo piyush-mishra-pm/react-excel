@@ -16,3 +16,7 @@ Analysing Excel sheet using React Frontend.
 - Ready the configs for generic pilots.
 - Check pending Todos.
 - Add conditions from Reco Front sheet.
+- Show Sheet Name instead of Sheet 0, 1, 2, etc.
+- Case insensitive Column Title comparison (Check code if necessary).
+- Empty rows (until row end).
+- Foldable test result sections. (Schema, Single Sheet, Across Sheet).

@@ -7,7 +7,7 @@ import {getColumnNames, findTestFunctionByTestId} from './TestUtils';
 function PerformTests() {
   const state = store.getState();
   performSchemaLevelTests(state);
-  //performCellLevelTests(state);
+  performCellLevelTests(state);
   performSheetLevelTests();
   performAcrossSheetTests();
 }
@@ -64,8 +64,8 @@ function performAcrossSheetTests() {
 function performCellLevelTests(state) {
   const SHEETS_FOR_TESTS = TEST_SETUP.map((sheetTestConfig) => sheetTestConfig.sheetNum);
   for (const SHEET_FOR_TESTS of SHEETS_FOR_TESTS) {
-    const sheetNumber = SHEETS_FOR_TESTS[SHEET_FOR_TESTS];
-    const sheet = state.root.importedData[sheetNumber];
+    const sheetNumber = SHEET_FOR_TESTS; //SHEETS_FOR_TESTS[SHEET_FOR_TESTS];
+    const sheet = state.root.importedData[SHEET_FOR_TESTS];
     for (const rowNum in sheet) {
       const row = sheet[rowNum];
       const ROW_KEYS = Object.keys(row);

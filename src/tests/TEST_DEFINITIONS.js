@@ -405,6 +405,7 @@ const TEST_DEFINITIONS = {
         COLUMN_NUMS: [0, 1, 2],
         ROW_START: 1,
         ROW_END: MINUS_ONE,
+        TEST_MESSAGE: 'Unique row test after column concat.',
       },
       testFunction(sheetNumber, testMetadata) {
         if (isNaN(sheetNumber) || Object.keys(testMetadata).length === 0) {
@@ -424,9 +425,9 @@ const TEST_DEFINITIONS = {
         if (!nonUniqueInstances || nonUniqueInstances.length === 0) {
           TestUtils.dispatchSheetLevelTestAction(
             this.id,
-            `Unique rows ${rowStart}-${rowEnd === -1 ? '' : rowEnd} and columns ${columnNums.join(
-              ','
-            )} in sheet # ${sheetNumber}`,
+            `${testMetadata.TEST_MESSAGE}: Unique rows ${rowStart}-${
+              rowEnd === -1 ? 'end' : rowEnd
+            } and columns ${columnNums.join(',')} in sheet # ${sheetNumber}`,
             TEST_STATUS.TEST_PASSED,
             sheetNumber,
             {
@@ -439,9 +440,9 @@ const TEST_DEFINITIONS = {
         } else {
           TestUtils.dispatchSheetLevelTestAction(
             this.id,
-            `Repeated rows for ${rowStart}-${rowEnd === -1 ? '' : rowEnd} and columns ${columnNums.join(
-              ','
-            )} in sheet # ${sheetNumber}`,
+            `${testMetadata.TEST_MESSAGE}: Repeated rows for ${rowStart}-${
+              rowEnd === -1 ? 'end' : rowEnd
+            } and columns ${columnNums.join(',')} in sheet # ${sheetNumber}`,
             TEST_STATUS.TEST_FAILED,
             sheetNumber,
             {
@@ -468,6 +469,7 @@ const TEST_DEFINITIONS = {
         COLUMN_NUMS_IN_OTHER_SHEET: [0, 1, 2],
         ROW_START_IN_OTHER_SHEET: 1,
         ROW_END_IN_OTHER_SHEET: MINUS_ONE,
+        TEST_MESSAGE: 'Unique row test after column concat across sheet.',
       },
       testFunction(sheetNumber, testMetadata) {
         if (
@@ -535,7 +537,7 @@ const TEST_DEFINITIONS = {
         if (!nonUniqueInstances || nonUniqueInstances.length === 0) {
           TestUtils.dispatchAcrossSheetTestAction(
             this.id,
-            `Unique rows in ${rowStartThisSheet}-${
+            `${testMetadata.TEST_MESSAGE}: Unique rows in ${rowStartThisSheet}-${
               rowEndThisSheet === MINUS_ONE ? 'end' : rowEndThisSheet
             } and columns ${columnNumsThisSheet.join(
               ','
@@ -558,7 +560,7 @@ const TEST_DEFINITIONS = {
         } else {
           TestUtils.dispatchAcrossSheetTestAction(
             this.id,
-            `Repeated rows in ${rowStartThisSheet}-${
+            `${testMetadata.TEST_MESSAGE}: Repeated rows in ${rowStartThisSheet}-${
               rowEndThisSheet === MINUS_ONE ? 'end' : rowEndThisSheet
             } and columns ${columnNumsThisSheet.join(
               ','

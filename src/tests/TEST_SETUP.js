@@ -2,152 +2,7 @@ import TEST_DEFINITIONS, {UNTIL_LAST_ROW} from './TEST_DEFINITIONS';
 
 const TEST_SETUP = [
   {
-    sheetNum: 0,
-    sheetSchemaCheck: {
-      testConfigs: [
-        {
-          testId: TEST_DEFINITIONS.TESTS.TEST_SCHEMA_MATCH_COL_NAMES.id,
-          testMedata: {
-            columnNames: [
-              'Recommendation ID',
-              'Category',
-              'ORIGINAL\nlocale',
-              'ORIGINAL\ntitle',
-              'ORIGINAL\ndescription ',
-              'Utility Defined Locale',
-              'Utility Defined Title',
-              'Utility Defined Description',
-              'FCR \n(Y/N)',
-              'Program Reco (Y/N)',
-              'Tags\n(OBSOLETE COLUMN, DO NOT USE)',
-              'Call To Action Text (To appear on the button to link, eg, "Enroll Now" or "Purchase Here")',
-              'Link (To a detailed reco page, third-party product site, or utility program)',
-              'CallToActionStyle - 0 is orange button, 1 is blue or white button\n(OBSOLETE COLUMN, DO NOT USE)',
-              'Icon - (must be transparent so it works against the colored background in emails and responsive web pages)\n(Max link length = 250 char)',
-              'Live Images - Thumbnail Res\n(Max link length = 250 char)',
-              'Live Images - Elongated Res\n(Max link length = 250 char)',
-              'Live Images - Shortened Res\n(Max link length = 250 char)',
-              'Channel',
-              '__EMPTY',
-              '__EMPTY_1',
-            ],
-          },
-        },
-      ],
-    },
-    columnConfigs: [
-      // Text tests:
-      {
-        columnNums: [3, 4],
-        testConfigs: [
-          {
-            testId: TEST_DEFINITIONS.TESTS.TEST_TEXT_EMPTY.id,
-            testMedata: {},
-          },
-          {
-            testId: TEST_DEFINITIONS.TESTS.TEST_TEXT_TOO_LONG.id,
-            testMedata: {
-              MAX_CHAR_LEN: 120,
-            },
-          },
-        ],
-      },
-
-      // Image tests:
-      {
-        columnNums: [14],
-        testConfigs: [
-          {
-            testId: TEST_DEFINITIONS.TESTS.TEST_IMAGE_DIMENSIONS_INCORRECT.id,
-            testMedata: {
-              WIDTH_IN_PIXELS: 650,
-              HEIGHT_IN_PIXELS: 650,
-            },
-          },
-          {
-            testId: TEST_DEFINITIONS.TESTS.TEST_IMAGE_FORMAT_INCORRECT.id,
-            testMedata: {
-              IMAGE_FORMATS_ALLOWED: ['png'],
-            },
-          },
-        ],
-      },
-      {
-        columnNums: [15, 16],
-        testConfigs: [
-          {
-            testId: TEST_DEFINITIONS.TESTS.TEST_IMAGE_FORMAT_INCORRECT.id,
-            testMedata: {
-              IMAGE_FORMATS_ALLOWED: ['jpg', 'jpeg'],
-            },
-          },
-          {
-            testId: TEST_DEFINITIONS.TESTS.TEST_IMAGE_DIMENSIONS_INCORRECT.id,
-            testMedata: {
-              WIDTH_IN_PIXELS: 1982,
-              HEIGHT_IN_PIXELS: 856,
-            },
-          },
-        ],
-      },
-    ],
-    sheetLevelTestConfigs: [
-      {
-        testConfig: {
-          testId: TEST_DEFINITIONS.TESTS.UNIQUE_ROW_AFTER_COLUMN_CONCAT.id,
-          testMedata: {
-            COLUMN_NUMS: [0, 1, 2],
-            ROW_START: 0,
-            ROW_END: UNTIL_LAST_ROW,
-            // Sheet is inherited from `sheetNum` property of this test object.
-          },
-        },
-      },
-      {
-        testConfig: {
-          testId: TEST_DEFINITIONS.TESTS.UNIQUE_ROW_AFTER_COLUMN_CONCAT.id,
-          testMedata: {
-            COLUMN_NUMS: [0, 1, 3],
-            ROW_START: 0,
-            ROW_END: UNTIL_LAST_ROW,
-            // Sheet is inherited from `sheetNum` property of this test object.
-          },
-        },
-      },
-    ],
-    acrossSheetTestConfigs: [
-      {
-        testConfig: {
-          testId: TEST_DEFINITIONS.TESTS.UNIQUE_ROW_AFTER_COLUMN_CONCAT_ACROSS_SHEET.id,
-          testMedata: {
-            COLUMN_NUMS_IN_THIS_SHEET: [0, 1, 2],
-            ROW_START_IN_THIS_SHEET: 0,
-            ROW_END_IN_THIS_SHEET: UNTIL_LAST_ROW,
-            OTHER_SHEET_NUM: 1,
-            COLUMN_NUMS_IN_OTHER_SHEET: [0, 1, 2],
-            ROW_START_IN_OTHER_SHEET: 0,
-            ROW_END_IN_OTHER_SHEET: UNTIL_LAST_ROW,
-          },
-        },
-      },
-      {
-        testConfig: {
-          testId: TEST_DEFINITIONS.TESTS.UNIQUE_ROW_AFTER_COLUMN_CONCAT_ACROSS_SHEET.id,
-          testMedata: {
-            COLUMN_NUMS_IN_THIS_SHEET: [0, 1, 3],
-            ROW_START_IN_THIS_SHEET: 0,
-            ROW_END_IN_THIS_SHEET: UNTIL_LAST_ROW,
-            OTHER_SHEET_NUM: 1,
-            COLUMN_NUMS_IN_OTHER_SHEET: [0, 1, 3],
-            ROW_START_IN_OTHER_SHEET: 0,
-            ROW_END_IN_OTHER_SHEET: UNTIL_LAST_ROW,
-          },
-        },
-      },
-    ],
-  },
-  {
-    sheetNum: 1,
+    sheetNum: 2,
     sheetSchemaCheck: {
       testConfigs: [
         {
@@ -170,44 +25,47 @@ const TEST_SETUP = [
               'CallToAction\n(12)',
               'CTA Link',
               'Icon',
-              'Live Images - Thumbnail Res',
-              'Live Images - Elongated Res',
-              'Live Images - Shortened Res\n(For Featured Content in Emails and HERs)',
+              "Live Images - Thumbnail Res\n\nOnly review for email if you'd like the reco to be featured, otherwise review for paper recos only",
+              "Live Images - Elongated Res\n\nOnly review for email if you'd like the reco to be featured, otherwise review for paper recos only",
+              "Live Images - Shortened Res\n(For Featured Content in Emails and HERs)\n\nOnly review for email if you'd like the reco to be featured, otherwise review for paper recos only",
               'Channel',
-              'Additional Comments',
+              'Disable? (Select Yes or leave blank)',
             ],
           },
         },
       ],
     },
+
+    // Cell Level Checks:
     columnConfigs: [
-      // Text tests:
+      // Text Empty:
       {
-        columnNums: [4, 5],
+        columnNums: [0, 1, 4, 5, 7, 8, 11, 12, 15, 16, 17, 18, 19],
         testConfigs: [
           {
             testId: TEST_DEFINITIONS.TESTS.TEST_TEXT_EMPTY.id,
             testMedata: {},
           },
+        ],
+      },
+      {
+        columnNums: [4, 5],
+        testConfigs: [
           {
             testId: TEST_DEFINITIONS.TESTS.TEST_TEXT_TOO_LONG.id,
             testMedata: {
-              MAX_CHAR_LEN: 120,
+              MAX_CHAR_LEN: 35,
             },
           },
         ],
       },
       {
-        columnNums: [7],
+        columnNums: [7, 8],
         testConfigs: [
-          {
-            testId: TEST_DEFINITIONS.TESTS.TEST_TEXT_EMPTY.id,
-            testMedata: {},
-          },
           {
             testId: TEST_DEFINITIONS.TESTS.TEST_TEXT_TOO_LONG.id,
             testMedata: {
-              MAX_CHAR_LEN: 120,
+              MAX_CHAR_LEN: 105,
             },
           },
         ],
@@ -216,32 +74,28 @@ const TEST_SETUP = [
         columnNums: [11, 12],
         testConfigs: [
           {
-            testId: TEST_DEFINITIONS.TESTS.TEST_TEXT_ENUM_MATCHES.id,
+            testId: TEST_DEFINITIONS.TESTS.TEST_TEXT_TOO_LONG.id,
             testMedata: {
-              ALLOWED_VALUES: ['Y', 'N'],
+              MAX_CHAR_LEN: 1,
+            },
+          },
+        ],
+      },
+      {
+        columnNums: [15, 16, 17, 18],
+        testConfigs: [
+          {
+            testId: TEST_DEFINITIONS.TESTS.TEST_TEXT_TOO_LONG.id,
+            testMedata: {
+              MAX_CHAR_LEN: 250,
             },
           },
         ],
       },
 
-      // Image tests:
+      //Image tests:
       {
-        columnNums: [15, 16, 17],
-        testConfigs: [
-          {
-            testId: TEST_DEFINITIONS.TESTS.TEST_TEXT_EMPTY.id,
-            testMedata: {},
-          },
-          {
-            testId: TEST_DEFINITIONS.TESTS.TEST_IMAGE_FORMAT_INCORRECT.id,
-            testMedata: {
-              IMAGE_FORMATS_ALLOWED: ['png', 'jpg'],
-            },
-          },
-        ],
-      },
-      {
-        columnNums: [15, 18],
+        columnNums: [15],
         testConfigs: [
           {
             testId: TEST_DEFINITIONS.TESTS.TEST_IMAGE_DIMENSIONS_INCORRECT.id,
@@ -250,11 +104,23 @@ const TEST_SETUP = [
               HEIGHT_IN_PIXELS: 650,
             },
           },
+          {
+            testId: TEST_DEFINITIONS.TESTS.TEST_IMAGE_FORMAT_INCORRECT.id,
+            testMedata: {
+              IMAGE_FORMATS_ALLOWED: ['png'],
+            },
+          },
         ],
       },
       {
         columnNums: [16],
         testConfigs: [
+          {
+            testId: TEST_DEFINITIONS.TESTS.TEST_IMAGE_FORMAT_INCORRECT.id,
+            testMedata: {
+              IMAGE_FORMATS_ALLOWED: ['png', 'jpg', 'jpeg'],
+            },
+          },
           {
             testId: TEST_DEFINITIONS.TESTS.TEST_IMAGE_DIMENSIONS_INCORRECT.id,
             testMedata: {
@@ -268,6 +134,12 @@ const TEST_SETUP = [
         columnNums: [17],
         testConfigs: [
           {
+            testId: TEST_DEFINITIONS.TESTS.TEST_IMAGE_FORMAT_INCORRECT.id,
+            testMedata: {
+              IMAGE_FORMATS_ALLOWED: ['jpg', 'jpeg'],
+            },
+          },
+          {
             testId: TEST_DEFINITIONS.TESTS.TEST_IMAGE_DIMENSIONS_INCORRECT.id,
             testMedata: {
               WIDTH_IN_PIXELS: 1982,
@@ -275,6 +147,157 @@ const TEST_SETUP = [
             },
           },
         ],
+      },
+      {
+        columnNums: [18],
+        testConfigs: [
+          {
+            testId: TEST_DEFINITIONS.TESTS.TEST_IMAGE_FORMAT_INCORRECT.id,
+            testMedata: {
+              IMAGE_FORMATS_ALLOWED: ['png'],
+            },
+          },
+          {
+            testId: TEST_DEFINITIONS.TESTS.TEST_IMAGE_DIMENSIONS_INCORRECT.id,
+            testMedata: {
+              WIDTH_IN_PIXELS: 285,
+              HEIGHT_IN_PIXELS: 340,
+            },
+          },
+        ],
+      },
+    ],
+    sheetLevelTestConfigs: [
+      {
+        testConfig: {
+          testId: TEST_DEFINITIONS.TESTS.UNIQUE_ROW_AFTER_COLUMN_CONCAT.id,
+          testMedata: {
+            COLUMN_NUMS: [0],
+            ROW_START: 0,
+            ROW_END: 18,
+            TEST_MESSAGE: 'RecoID should occur only once in sheet.',
+          },
+        },
+      },
+      {
+        testConfig: {
+          testId: TEST_DEFINITIONS.TESTS.UNIQUE_ROW_AFTER_COLUMN_CONCAT.id,
+          testMedata: {
+            COLUMN_NUMS: [4],
+            ROW_START: 0,
+            ROW_END: 18,
+            TEST_MESSAGE: 'Reco Title should occur only once in sheet.',
+          },
+        },
+      },
+      {
+        testConfig: {
+          testId: TEST_DEFINITIONS.TESTS.UNIQUE_ROW_AFTER_COLUMN_CONCAT.id,
+          testMedata: {
+            COLUMN_NUMS: [5],
+            ROW_START: 0,
+            ROW_END: 18,
+            TEST_MESSAGE: 'Reco Utility Edited Title should not repeat in sheet.',
+          },
+        },
+      },
+      {
+        testConfig: {
+          testId: TEST_DEFINITIONS.TESTS.UNIQUE_ROW_AFTER_COLUMN_CONCAT.id,
+          testMedata: {
+            COLUMN_NUMS: [7],
+            ROW_START: 0,
+            ROW_END: 18,
+            TEST_MESSAGE: 'Reco Description should not repeat in sheet.',
+          },
+        },
+      },
+      {
+        testConfig: {
+          testId: TEST_DEFINITIONS.TESTS.UNIQUE_ROW_AFTER_COLUMN_CONCAT.id,
+          testMedata: {
+            COLUMN_NUMS: [8],
+            ROW_START: 0,
+            ROW_END: 18,
+            TEST_MESSAGE: 'Reco Utility Edited Description should not repeat in sheet.',
+          },
+        },
+      },
+      {
+        testConfig: {
+          testId: TEST_DEFINITIONS.TESTS.UNIQUE_ROW_AFTER_COLUMN_CONCAT.id,
+          testMedata: {
+            COLUMN_NUMS: [15],
+            ROW_START: 0,
+            ROW_END: 18,
+            TEST_MESSAGE: "Icon url shouldn't repeat.",
+          },
+        },
+      },
+      {
+        testConfig: {
+          testId: TEST_DEFINITIONS.TESTS.UNIQUE_ROW_AFTER_COLUMN_CONCAT.id,
+          testMedata: {
+            COLUMN_NUMS: [16],
+            ROW_START: 0,
+            ROW_END: 18,
+            TEST_MESSAGE: "Unique Live Images - Thumbnail Res shouldn't repeat.",
+          },
+        },
+      },
+      {
+        testConfig: {
+          testId: TEST_DEFINITIONS.TESTS.UNIQUE_ROW_AFTER_COLUMN_CONCAT.id,
+          testMedata: {
+            COLUMN_NUMS: [17],
+            ROW_START: 0,
+            ROW_END: 18,
+            TEST_MESSAGE: "Unique Live Images - Elongated url shouldn't repeat.",
+          },
+        },
+      },
+      {
+        testConfig: {
+          testId: TEST_DEFINITIONS.TESTS.UNIQUE_ROW_AFTER_COLUMN_CONCAT.id,
+          testMedata: {
+            COLUMN_NUMS: [18],
+            ROW_START: 0,
+            ROW_END: 18,
+            TEST_MESSAGE: "Unique Live Images - Shortened url shouldn't repeat.",
+          },
+        },
+      },
+    ],
+    acrossSheetTestConfigs: [
+      {
+        testConfig: {
+          testId: TEST_DEFINITIONS.TESTS.UNIQUE_ROW_AFTER_COLUMN_CONCAT_ACROSS_SHEET.id,
+          testMedata: {
+            COLUMN_NUMS_IN_THIS_SHEET: [0],
+            ROW_START_IN_THIS_SHEET: 0,
+            ROW_END_IN_THIS_SHEET: 18,
+            OTHER_SHEET_NUM: 1,
+            COLUMN_NUMS_IN_OTHER_SHEET: [2],
+            ROW_START_IN_OTHER_SHEET: 8,
+            ROW_END_IN_OTHER_SHEET: 26,
+            TEST_MESSAGE: 'RecoID uniquely exist across sheets.',
+          },
+        },
+      },
+      {
+        testConfig: {
+          testId: TEST_DEFINITIONS.TESTS.UNIQUE_ROW_AFTER_COLUMN_CONCAT_ACROSS_SHEET.id,
+          testMedata: {
+            COLUMN_NUMS_IN_THIS_SHEET: [0, 1],
+            ROW_START_IN_THIS_SHEET: 0,
+            ROW_END_IN_THIS_SHEET: 18,
+            OTHER_SHEET_NUM: 1,
+            COLUMN_NUMS_IN_OTHER_SHEET: [2, 3],
+            ROW_START_IN_OTHER_SHEET: 8,
+            ROW_END_IN_OTHER_SHEET: 26,
+            TEST_MESSAGE: 'Appliance ID and Appliance Category pair should remain same across sheet.',
+          },
+        },
       },
     ],
   },

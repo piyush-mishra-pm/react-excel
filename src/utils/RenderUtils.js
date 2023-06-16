@@ -134,6 +134,8 @@ export function renderHeaderRow(row, currentActiveSheetNumber) {
 }
 
 function getListOfAppliedTestForTheColumn(colIndex, sheetTestConfig) {
+  if (!sheetTestConfig.length) return [];
+
   // Warning: Only 1 sheetConfig allowed per sheet.
   const columnConfigsRelevantToTheColumn = sheetTestConfig[0].columnConfigs.filter((columnConfig) =>
     _.includes(columnConfig.columnNums, colIndex)
@@ -229,6 +231,12 @@ export function renderSingleSheetLevelChecks(singleSheetLevelTestResults) {
           key={_.uniqueId(index)}
         >
           <div className="ui blue ribbon label">{String(index + 1) + '. ' + testResult.testId}</div>
+          {testResult.testStatus === TEST_STATUS.TEST_PASSED && (
+            <div>
+              <div className="header">Message:</div>
+              <div>{testResult.testResultMessage}</div>
+            </div>
+          )}
           {/** Only show metadata if failed schema tests */}
           {testResult.testStatus === TEST_STATUS.TEST_FAILED && (
             <div>
@@ -276,6 +284,12 @@ export function renderAcrossSheetLevelChecks(acrossSheetLevelTestResults, thisSh
           key={_.uniqueId(index)}
         >
           <div className="ui blue ribbon label">{String(index + 1) + '. ' + testResult.testId}</div>
+          {testResult.testStatus === TEST_STATUS.TEST_PASSED && (
+            <div>
+              <div className="header">Message:</div>
+              <div>{testResult.testResultMessage}</div>
+            </div>
+          )}
           {/** Only show metadata if failed schema tests */}
           {testResult.testStatus === TEST_STATUS.TEST_FAILED && (
             <div>
