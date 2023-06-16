@@ -92,13 +92,16 @@ function getInitSheetLevelTestData(importedData) {
   const clonedImportedData = _.cloneDeep(importedData);
   const initSheetLevelTestData = [];
   for (const key in clonedImportedData) {
-    initSheetLevelTestData[key] = {sheetLevelTestResults: {}};
+    initSheetLevelTestData[key] = {sheetLevelTestResults: []};
   }
   return initSheetLevelTestData;
 }
 
 function modifySheetLevelTestResults(testResultsDataSheetLevel, payload) {
-  testResultsDataSheetLevel[payload.sheet].sheetLevelTestResults = payload.testResults;
+  testResultsDataSheetLevel[payload.sheet].sheetLevelTestResults = _.concat(
+    testResultsDataSheetLevel[payload.sheet].sheetLevelTestResults,
+    payload.testResults
+  );
   return testResultsDataSheetLevel;
 }
 
@@ -106,13 +109,16 @@ function getInitAcrossSheetTestData(importedData) {
   const clonedImportedData = _.cloneDeep(importedData);
   const initAcrossSheetTestData = [];
   for (const key in clonedImportedData) {
-    initAcrossSheetTestData[key] = {acrossSheetTestResults: {}};
+    initAcrossSheetTestData[key] = {acrossSheetTestResults: []};
   }
   return initAcrossSheetTestData;
 }
 
 function modifyAcrossSheetTestResults(testResultsDataSheetLevel, payload) {
-  testResultsDataSheetLevel[payload.sheet].acrossSheetTestResults = payload.testResults;
+  testResultsDataSheetLevel[payload.sheet].acrossSheetTestResults = _.concat(
+    testResultsDataSheetLevel[payload.sheet].acrossSheetTestResults,
+    payload.testResults
+  );
   return testResultsDataSheetLevel;
 }
 

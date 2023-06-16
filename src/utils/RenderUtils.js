@@ -159,7 +159,7 @@ function renderArrayOrPrimitive(content) {
 export function renderSchemaLevelChecks(sheetLevelSchemaTestResults) {
   return (
     <div>
-      Schema Level checks:
+      <div className="ui red ribbon label">Schema Level checks:</div>
       {sheetLevelSchemaTestResults.map((testResult, index) => (
         <div
           className={`ui ${
@@ -216,7 +216,7 @@ export function renderSchemaLevelChecks(sheetLevelSchemaTestResults) {
 export function renderSingleSheetLevelChecks(singleSheetLevelTestResults) {
   return (
     <div>
-      Single Sheet Level Checks
+      <div className="ui red ribbon label">Single Sheet Level Checks</div>
       {singleSheetLevelTestResults.map((testResult, index) => (
         <div
           className={`ui ${
@@ -228,7 +228,7 @@ export function renderSingleSheetLevelChecks(singleSheetLevelTestResults) {
           } message`}
           key={_.uniqueId(index)}
         >
-          <p>{testResult.testId}</p>
+          <div className="ui blue ribbon label">{String(index + 1) + '. ' + testResult.testId}</div>
           {/** Only show metadata if failed schema tests */}
           {testResult.testStatus === TEST_STATUS.TEST_FAILED && (
             <div>
@@ -263,7 +263,7 @@ export function renderSingleSheetLevelChecks(singleSheetLevelTestResults) {
 export function renderAcrossSheetLevelChecks(acrossSheetLevelTestResults, thisSheetNum) {
   return (
     <div>
-      Across Sheet Level Checks
+      <div className="ui red ribbon label">Across Sheet Level Checks</div>
       {acrossSheetLevelTestResults.map((testResult, index) => (
         <div
           className={`ui ${
@@ -275,7 +275,7 @@ export function renderAcrossSheetLevelChecks(acrossSheetLevelTestResults, thisSh
           } message`}
           key={_.uniqueId(index)}
         >
-          <p>{testResult.testId}</p>
+          <div className="ui blue ribbon label">{String(index + 1) + '. ' + testResult.testId}</div>
           {/** Only show metadata if failed schema tests */}
           {testResult.testStatus === TEST_STATUS.TEST_FAILED && (
             <div>
@@ -316,7 +316,9 @@ export function renderAcrossSheetLevelChecks(acrossSheetLevelTestResults, thisSh
                     <tr key={_.uniqueId()}>
                       <td>{match.concatString}</td>
                       <td>
-                        Sheet:{match.from.sheetNum !== thisSheetNum ? `${match.from.sheetNum} [REVERSE]` : thisSheetNum}
+                        Sheet:
+                        {match.from.sheetNum !== thisSheetNum ? `${match.from.sheetNum}` : thisSheetNum}
+                        {match.from.sheetNum !== thisSheetNum ? <span className="ui label">[REVERSE]</span> : ''}
                         <br />
                         Rows:{match.from.rowIdx.join(',')}
                       </td>

@@ -72,7 +72,7 @@ function RenderTestResults() {
       {/** Render Spreadsheet level checks: */}
       {sheetsData.length ? (
         <div className="ui bottom attached active tab segment" key={4}>
-          Cell Level checks:
+          <div className="ui red ribbon label">Cell Level checks:</div>
           <RenderSpreadSheet
             sheetData={sheetsData[activeTestResultTabNumber]}
             currentActiveSheetNumber={activeTestResultTabNumber}

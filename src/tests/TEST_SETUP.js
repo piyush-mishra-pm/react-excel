@@ -103,6 +103,17 @@ const TEST_SETUP = [
           },
         },
       },
+      {
+        testConfig: {
+          testId: TEST_DEFINITIONS.TESTS.UNIQUE_ROW_AFTER_COLUMN_CONCAT.id,
+          testMedata: {
+            COLUMN_NUMS: [0, 1, 3],
+            ROW_START: 0,
+            ROW_END: UNTIL_LAST_ROW,
+            // Sheet is inherited from `sheetNum` property of this test object.
+          },
+        },
+      },
     ],
     acrossSheetTestConfigs: [
       {
@@ -114,6 +125,20 @@ const TEST_SETUP = [
             ROW_END_IN_THIS_SHEET: UNTIL_LAST_ROW,
             OTHER_SHEET_NUM: 1,
             COLUMN_NUMS_IN_OTHER_SHEET: [0, 1, 2],
+            ROW_START_IN_OTHER_SHEET: 0,
+            ROW_END_IN_OTHER_SHEET: UNTIL_LAST_ROW,
+          },
+        },
+      },
+      {
+        testConfig: {
+          testId: TEST_DEFINITIONS.TESTS.UNIQUE_ROW_AFTER_COLUMN_CONCAT_ACROSS_SHEET.id,
+          testMedata: {
+            COLUMN_NUMS_IN_THIS_SHEET: [0, 1, 3],
+            ROW_START_IN_THIS_SHEET: 0,
+            ROW_END_IN_THIS_SHEET: UNTIL_LAST_ROW,
+            OTHER_SHEET_NUM: 1,
+            COLUMN_NUMS_IN_OTHER_SHEET: [0, 1, 3],
             ROW_START_IN_OTHER_SHEET: 0,
             ROW_END_IN_OTHER_SHEET: UNTIL_LAST_ROW,
           },

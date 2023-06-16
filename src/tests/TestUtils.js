@@ -68,14 +68,11 @@ export function dispatchSheetLevelTestAction(
   let sheetWithSheetLevelTestErrors = _.cloneDeep(state.root.testResultsSheetLevelTest[sheetNumber]);
 
   sheetWithSheetLevelTestErrors['testResults'] = _.cloneDeep(
-    _.uniqBy(
-      _.compact(
-        _.concat(
-          _.cloneDeep({testId, testResultMessage, testStatus, testResultMetadata}),
-          sheetWithSheetLevelTestErrors['testResults']
-        )
-      ),
-      'testId'
+    _.compact(
+      _.concat(
+        _.cloneDeep({testId, testResultMessage, testStatus, testResultMetadata}),
+        sheetWithSheetLevelTestErrors['testResults']
+      )
     )
   );
 
@@ -99,14 +96,11 @@ export function dispatchAcrossSheetTestAction(
   let sheetWithAcrossSheetLevelTestErrors = _.cloneDeep(state.root.testResultsAcrossSheetTest[sheetNumber]);
 
   sheetWithAcrossSheetLevelTestErrors['testResults'] = _.cloneDeep(
-    _.uniqBy(
-      _.compact(
-        _.concat(
-          _.cloneDeep({testId, testResultMessage, testStatus, testResultMetadata}),
-          sheetWithAcrossSheetLevelTestErrors['testResults']
-        )
-      ),
-      'testId'
+    _.compact(
+      _.concat(
+        _.cloneDeep({testId, testResultMessage, testStatus, testResultMetadata}),
+        sheetWithAcrossSheetLevelTestErrors['testResults']
+      )
     )
   );
 
