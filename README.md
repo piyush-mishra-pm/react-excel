@@ -20,3 +20,29 @@ Analysing Excel sheet using React Frontend.
 - Case insensitive Column Title comparison (Check code if necessary).
 - Empty rows (until row end).
 - Foldable test result sections. (Schema, Single Sheet, Across Sheet).
+
+
+
+
+Checks list:
+
+- Sheet Schema Check: 
+  - TEST_SCHEMA_MATCH_COL_NAMES : Validates column names of sheet against an expected schema.
+  
+- Single Sheet Check:
+  - UNIQUE_ROW_AFTER_COLUMN_CONCAT : Column combo occurs as unique row.
+
+- Across Sheet Check:
+  - UNIQUE_ROW_AFTER_COLUMN_CONCAT_ACROSS_SHEET: Column combo uniquely occurs in two sheets. Shouldn't occur Multiple times or be absent.
+
+
+- Cell Level Check:
+  - Text checks:
+    - TEST_TEXT_EMPTY: is empty text in column?
+    - TEST_TEXT_TOO_LONG: text longer than specified char length?
+    - TEST_TEXT_TOO_SHORT: text shorter than specified char length?
+    - TEST_TEXT_ENUM_MATCHES: Allows only fixed texts (like 'Y' and 'N' in Program column).
+  - Image checks:
+    - TEST_IMAGE_CANT_LOAD:
+    - TEST_IMAGE_DIMENSIONS_INCORRECT:
+    - TEST_IMAGE_FORMAT_INCORRECT:

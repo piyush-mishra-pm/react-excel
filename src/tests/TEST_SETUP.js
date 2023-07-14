@@ -92,6 +92,17 @@ const TEST_SETUP = [
           },
         ],
       },
+      {
+        columnNums: [11, 12],
+        testConfigs: [
+          {
+            testId: TEST_DEFINITIONS.TESTS.TEST_TEXT_ENUM_MATCHES.id,
+            testMedata: {
+              ALLOWED_VALUES: ['Y', 'N'],
+            },
+          },
+        ],
+      },
 
       //Image tests:
       {

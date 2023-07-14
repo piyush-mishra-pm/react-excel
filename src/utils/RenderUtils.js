@@ -332,7 +332,11 @@ export function renderAcrossSheetLevelChecks(acrossSheetLevelTestResults, thisSh
                       <td>
                         Sheet:
                         {match.from.sheetNum !== thisSheetNum ? `${match.from.sheetNum}` : thisSheetNum}
-                        {match.from.sheetNum !== thisSheetNum ? <span className="ui label">[REVERSE]</span> : ''}
+                        {match.from.sheetNum !== thisSheetNum ? (
+                          <span className="ui label">[Present In other sheet, but missing in this sheet]</span>
+                        ) : (
+                          ''
+                        )}
                         <br />
                         Rows:{match.from.rowIdx.join(',')}
                       </td>
