@@ -185,7 +185,7 @@ const TEST_SETUP = [
           testMedata: {
             COLUMN_NUMS: [0],
             ROW_START: 0,
-            ROW_END: 18,
+            ROW_END: 57,
             TEST_MESSAGE: 'RecoID should occur only once in sheet.',
           },
         },
@@ -196,7 +196,7 @@ const TEST_SETUP = [
           testMedata: {
             COLUMN_NUMS: [4],
             ROW_START: 0,
-            ROW_END: 18,
+            ROW_END: 57,
             TEST_MESSAGE: 'Reco Title should occur only once in sheet.',
           },
         },
@@ -207,7 +207,7 @@ const TEST_SETUP = [
           testMedata: {
             COLUMN_NUMS: [5],
             ROW_START: 0,
-            ROW_END: 18,
+            ROW_END: 57,
             TEST_MESSAGE: 'Reco Utility Edited Title should not repeat in sheet.',
           },
         },
@@ -218,7 +218,7 @@ const TEST_SETUP = [
           testMedata: {
             COLUMN_NUMS: [7],
             ROW_START: 0,
-            ROW_END: 18,
+            ROW_END: 57,
             TEST_MESSAGE: 'Reco Description should not repeat in sheet.',
           },
         },
@@ -229,7 +229,7 @@ const TEST_SETUP = [
           testMedata: {
             COLUMN_NUMS: [8],
             ROW_START: 0,
-            ROW_END: 18,
+            ROW_END: 57,
             TEST_MESSAGE: 'Reco Utility Edited Description should not repeat in sheet.',
           },
         },
@@ -240,7 +240,7 @@ const TEST_SETUP = [
           testMedata: {
             COLUMN_NUMS: [15],
             ROW_START: 0,
-            ROW_END: 18,
+            ROW_END: 57,
             TEST_MESSAGE: "Icon url shouldn't repeat.",
           },
         },
@@ -251,7 +251,7 @@ const TEST_SETUP = [
           testMedata: {
             COLUMN_NUMS: [16],
             ROW_START: 0,
-            ROW_END: 18,
+            ROW_END: 57,
             TEST_MESSAGE: "Unique Live Images - Thumbnail Res shouldn't repeat.",
           },
         },
@@ -262,7 +262,7 @@ const TEST_SETUP = [
           testMedata: {
             COLUMN_NUMS: [17],
             ROW_START: 0,
-            ROW_END: 18,
+            ROW_END: 57,
             TEST_MESSAGE: "Unique Live Images - Elongated url shouldn't repeat.",
           },
         },
@@ -273,7 +273,7 @@ const TEST_SETUP = [
           testMedata: {
             COLUMN_NUMS: [18],
             ROW_START: 0,
-            ROW_END: 18,
+            ROW_END: 57,
             TEST_MESSAGE: "Unique Live Images - Shortened url shouldn't repeat.",
           },
         },
@@ -286,11 +286,11 @@ const TEST_SETUP = [
           testMedata: {
             COLUMN_NUMS_IN_THIS_SHEET: [0],
             ROW_START_IN_THIS_SHEET: 0,
-            ROW_END_IN_THIS_SHEET: 18,
+            ROW_END_IN_THIS_SHEET: 57,
             OTHER_SHEET_NUM: 1,
             COLUMN_NUMS_IN_OTHER_SHEET: [2],
             ROW_START_IN_OTHER_SHEET: 8,
-            ROW_END_IN_OTHER_SHEET: 26,
+            ROW_END_IN_OTHER_SHEET: 65,
             TEST_MESSAGE: 'RecoID uniquely exist across sheets.',
           },
         },
@@ -301,11 +301,11 @@ const TEST_SETUP = [
           testMedata: {
             COLUMN_NUMS_IN_THIS_SHEET: [0, 1],
             ROW_START_IN_THIS_SHEET: 0,
-            ROW_END_IN_THIS_SHEET: 18,
+            ROW_END_IN_THIS_SHEET: 57,
             OTHER_SHEET_NUM: 1,
             COLUMN_NUMS_IN_OTHER_SHEET: [2, 3],
             ROW_START_IN_OTHER_SHEET: 8,
-            ROW_END_IN_OTHER_SHEET: 26,
+            ROW_END_IN_OTHER_SHEET: 65,
             TEST_MESSAGE: 'Appliance ID and Appliance Category pair should remain same across sheet.',
           },
         },
